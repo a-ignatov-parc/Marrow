@@ -1,0 +1,533 @@
+<!DOCTYPE html>  <html> <head>   <title>core.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="core.html">                 core.js               </a>                                           <a class="source" href="core.loader.html">                 core.loader.js               </a>                                           <a class="source" href="core.observatory.html">                 core.observatory.js               </a>                                           <a class="source" href="core.transit.jquery.html">                 core.transit.jquery.js               </a>                                           <a class="source" href="core.transit.location.html">                 core.transit.location.js               </a>                                           <a class="source" href="core.utils.html">                 core.utils.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               core.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*global</span>
+<span class="cm">  _</span>
+<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>version: 1.3.6</h2>
+
+<p><strong>История версий:</strong>  </p>
+
+<ul>
+<li><p><code>1.3.6</code> - Все транзиты вынесены в отдельные модули и создана система подключения и запуска 
+любого кол-ва подключаемых транзитов. Сделан багофикс класса <code>core.Perf</code>.</p></li>
+<li><p><code>1.3.5</code> - Исправлена работа транзита селекторов в последних версиях jquery.</p></li>
+<li><p><code>1.3.4</code> - В дефолтные параметры объекта <code>hosts</code> добавлена ссылка на папку <code>html</code>.</p></li>
+<li><p><code>1.3.3</code> - Добавлена возможность отключать использование транзита через опции приложения.</p></li>
+<li><p><code>1.3.2</code> - Исправлена ошибка когда при инициализации не синхронизировались роуты.</p></li>
+<li><p><code>1.3.1</code> - Добавлен метод для трансляции урлов с песочницы на главную страницу и обратно.</p></li>
+<li><p><code>1.3.0</code> - Из <code>core.js</code> вынесены все методы связанные с <code>backbone.js</code> в <code>core.sugar.js</code>, а так 
+же сделан рефакторин остальных методов.</p></li>
+<li><p><code>1.2.5</code> - Расширен функционал форматирования даты в методе <code>dateUTC</code>.</p></li>
+<li><p><code>1.2.4</code> - Реализован метод создающий транзит селекторов из песочницы на главный объект 
+<code>window</code>.</p></li>
+<li><p><code>1.2.3</code> - Добавлены дефолтные переменные для приложения + максимально вынесены методы 
+завязанные на рецепт.</p></li>
+<li><p><code>1.2.2</code> - Исправлена ошибка в методе <code>dateUTC</code> если в него не передана дата.</p></li>
+<li><p><code>1.2.1</code> - Удален метод компиляции шаблонов так как они теперь будут заранее скомпилированы.</p></li>
+<li><p><code>1.2.0</code> - Класс ядра переделан для правильной работы в полноценной песочнице.</p></li>
+</ul>
+
+<p>Объявляем лексические сокращения для <code>true</code> и <code>false</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nb">window</span><span class="p">.</span><span class="nx">YES</span> <span class="o">=</span> <span class="o">!</span><span class="mi">0</span><span class="p">;</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">NO</span> <span class="o">=</span> <span class="o">!</span><span class="mi">1</span><span class="p">;</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">WebApp</span> <span class="o">||</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">WebApp</span> <span class="o">=</span> <span class="p">{});</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">WebApp</span><span class="p">.</span><span class="nx">Core</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">webapp</span><span class="p">,</span> <span class="nb">window</span><span class="p">,</span> <span class="nx">sandbox</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Объявление переменных.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">splitReg</span> <span class="o">=</span> <span class="sr">/[:.\-\s\/]+/</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Метод реализующий подключение и отключение переданных транзитов с переданным набором 
+параметров.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">setTransits</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">args</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">),</span>
+        <span class="nx">method</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">shift</span><span class="p">(),</span>
+        <span class="nx">options</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">pop</span><span class="p">(),</span>
+        <span class="nx">name</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">_transits</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;No transits registered in collection!&#39;</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="o">!==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="s1">&#39;Last argument should be options object!&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">args</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;No transits found in arguments. Skiping...&#39;</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">name</span> <span class="o">=</span> <span class="nx">args</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">toLowerCase</span><span class="p">();</span>
+
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">_transits</span><span class="p">[</span><span class="nx">name</span><span class="p">])</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">_transits</span><span class="p">[</span><span class="nx">name</span><span class="p">][</span><span class="nx">method</span><span class="p">])</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">_transits</span><span class="p">[</span><span class="nx">name</span><span class="p">][</span><span class="nx">method</span><span class="p">].</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nb">window</span><span class="p">,</span> <span class="nx">sandbox</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+              <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="s1">&#39;No &quot;&#39;</span> <span class="o">+</span> <span class="nx">method</span> <span class="o">+</span> <span class="s1">&#39;&quot; method for transit with name &quot;&#39;</span> <span class="o">+</span> <span class="nx">args</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;&quot; were found! Skipping...&#39;</span><span class="p">);</span>
+            <span class="p">}</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="s1">&#39;No transit with name &quot;&#39;</span> <span class="o">+</span> <span class="nx">args</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;&quot; were found! Skipping...&#39;</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="s1">&#39;Transit name should be string! Skipping...&#39;</span><span class="p">,</span> <span class="nx">args</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Версия фреймворка <code>Marrow</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="s1">&#39;0.0.0&#39;</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Ссылка для получения из песочницы объекта <code>window</code> основного документа в котором 
+инициализируется веб-приложение.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">global</span> <span class="o">=</span> <span class="nb">window</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">debugMode</span> <span class="o">=</span> <span class="nx">NO</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">rootHost</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">strictMode</span> <span class="o">=</span> <span class="nx">YES</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">sandbox</span> <span class="o">=</span> <span class="nx">sandbox</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Создаем объект <code>hosts</code> со значениями по умолчанию.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">hosts</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">init</span><span class="o">:</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span>
+    <span class="nx">request</span><span class="o">:</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span>
+    <span class="nx">js</span><span class="o">:</span> <span class="s1">&#39;/js&#39;</span><span class="p">,</span>
+    <span class="nx">img</span><span class="o">:</span> <span class="s1">&#39;/img&#39;</span><span class="p">,</span>
+    <span class="nx">html</span><span class="o">:</span> <span class="s1">&#39;/html&#39;</span><span class="p">,</span>
+    <span class="nx">css</span><span class="o">:</span> <span class="s1">&#39;/styles/css&#39;</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Объявляем коллекцию алиасов</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">_globalLinks</span> <span class="o">=</span> <span class="p">{};</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Список зарегистрирвоанных в системе бандлов</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">list</span> <span class="o">=</span> <span class="p">[];</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Метод подключающий в песочницу транзиты чьи имена были переданы в аргементах функции</p>
+
+<p><strong>Пример:</strong>  </p>
+
+<pre><code>    core.useTransits('jquery', 'location', options);
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">useTransits</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">setTransits</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;bind&#39;</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">)));</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Метод отключающий в песочницу транзиты чьи имена были переданы в аргементах функции</p>
+
+<p><strong>Пример:</strong>  </p>
+
+<pre><code>    core.removeTransits('location', options);
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">removeTransits</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">setTransits</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;unbind&#39;</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">)));</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Метод, который будет позволять замерять производительность выполнения скриптов.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">Perf</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">startTime</span><span class="p">,</span>
+      <span class="nx">method</span><span class="p">,</span>
+      <span class="nx">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;now&#39;</span><span class="p">,</span> <span class="s1">&#39;webkitNow&#39;</span><span class="p">,</span> <span class="s1">&#39;msNow&#39;</span><span class="p">,</span> <span class="s1">&#39;mozNow&#39;</span><span class="p">],</span>
+      <span class="nx">perfNow</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">method</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nb">window</span><span class="p">.</span><span class="nx">performance</span><span class="p">[</span><span class="nx">method</span><span class="p">]();</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">methods</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">methods</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">methods</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="k">in</span> <span class="nb">window</span><span class="p">.</span><span class="nx">performance</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">method</span> <span class="o">=</span> <span class="nx">methods</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">start</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">startTime</span> <span class="o">=</span> <span class="nx">perfNow</span><span class="p">();</span>
+    <span class="p">};</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">end</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">startTime</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">perfNow</span><span class="p">()</span> <span class="o">-</span> <span class="nx">startTime</span><span class="p">;</span>
+    <span class="p">};</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Метод который генерирует уникальный 5 значный <code>ID</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">generateId</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;00000&#39;</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Метод который получает значение хеша урла. <br />
+Если не передан никакой аргумент, то получается значение хеша песочницы, если передан объект 
+<code>window</code>, то получается знвчение хеша которое установлено у переданного объекта.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">getLocationHash</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">windowLocation</span> <span class="o">=</span> <span class="nb">window</span> <span class="o">?</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">:</span> <span class="nx">sandbox</span><span class="p">.</span><span class="nx">location</span><span class="p">,</span>
+      <span class="nx">hash</span> <span class="o">=</span> <span class="nx">windowLocation</span><span class="p">.</span><span class="nx">href</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/#(.*)$/</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nx">hash</span> <span class="o">?</span> <span class="nx">hash</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Метод который полностью подменяет контекст вызова у переданной функции на тот что был передан 
+в параметрах. <br />
+Более быстрая альтернатива универсальному <code>fn.bind(context)</code> (http://jsperf.com/bind-experiment-2)</p>
+
+<p><strong>Пример:</strong>  </p>
+
+<pre><code>    var a = {
+        handler: core.bind(fn, context)
+    }
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">bind</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">fn</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">context</span> <span class="o">||</span> <span class="p">(</span><span class="nx">context</span> <span class="o">=</span> <span class="nb">window</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">fn</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+      <span class="p">};</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">NO</span><span class="p">;</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Метод который позволяет собрать новый объект из одного или более объектов на основе карты 
+атрибутов. <br />
+В результате получаем объект в который попали только те поля, что были указаны в карте с 
+именами цказанными в качестве значений атрибутов карты.</p>
+
+<p><strong>Пример:</strong>  </p>
+
+<pre><code>    this.core.aliasMerge({
+        _a: 'a',
+        _b: 'b',
+        _c: 'c',
+        _d: 'targetId',
+        _e: 'relatedItems',
+    }, {
+        a: 1,
+        b: 2,
+        c: 3,
+    }, {
+        b: 22,
+        targetId: 4
+    });
+</code></pre>
+
+<p><strong>Результат:</strong>  </p>
+
+<pre><code>    {
+        _a: 1,
+        _b: 22,
+        _c: 3,
+        _d: 4
+    }
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">aliasMerge</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">aliasMap</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="p">{},</span>
+      <span class="nx">reverseMap</span> <span class="o">=</span> <span class="p">{},</span>
+      <span class="nx">sources</span> <span class="o">=</span> <span class="p">[].</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+      <span class="nx">source</span> <span class="o">=</span> <span class="nx">sources</span><span class="p">.</span><span class="nx">shift</span><span class="p">(),</span>
+      <span class="nx">key</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="nx">key</span> <span class="k">in</span> <span class="nx">aliasMap</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">aliasMap</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">aliasMap</span><span class="p">[</span><span class="nx">key</span><span class="p">])</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">reverseMap</span><span class="p">[</span><span class="nx">aliasMap</span><span class="p">[</span><span class="nx">key</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">key</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(;</span><span class="nx">source</span><span class="p">;)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="nx">key</span> <span class="k">in</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">source</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">reverseMap</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">source</span><span class="p">[</span><span class="nx">key</span><span class="p">])</span> <span class="p">{</span>
+          <span class="nx">map</span><span class="p">[</span><span class="nx">reverseMap</span><span class="p">[</span><span class="nx">key</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">source</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">source</span> <span class="o">=</span> <span class="nx">sources</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">map</span><span class="p">;</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Метод который регистрирует и возвращает псевдонимы в которых указанны ссылки на переданные 
+объекты.</p>
+
+<p><strong>Пример:</strong>  </p>
+
+<ol>
+<li><p>Получение коллекции всех ссылок. Имеет аналог в виде <code>core.aliases</code></p>
+
+<pre><code>core.links();
+</code></pre></li>
+<li><p>Получение ссылки зарегистрированной по передаваемому псвдониму.</p>
+
+<pre><code>core.links('aliasName');
+</code></pre></li>
+<li><p>Регистрация ссылки на объект/переменную/фукцию под переданным псевдонимом.</p>
+
+<pre><code>core.links('aliasName', link);
+</code></pre></li>
+<li><p>Обновление значения алиаса без изменения ссылки на объект.</p>
+
+<pre><code>core.links('aliasName', newValue, true);
+</code></pre></li>
+</ol>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">links</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">aliasName</span><span class="p">,</span> <span class="nx">link</span><span class="p">,</span> <span class="nx">update</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Если коллекции ссылок нету, то создаем ее.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">this</span><span class="p">.</span><span class="nx">_globalLinks</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_globalLinks</span> <span class="o">=</span> <span class="p">{});</span>
+
+    <span class="kd">var</span> <span class="nx">hasName</span> <span class="o">=</span> <span class="o">!!</span><span class="nx">aliasName</span><span class="p">,</span>
+      <span class="nx">hasLink</span> <span class="o">=</span> <span class="nx">link</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">hasLink</span> <span class="o">&amp;&amp;</span> <span class="nx">hasName</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">aliasName</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_globalLinks</span><span class="p">[</span><span class="nx">aliasName</span><span class="p">])</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_globalLinks</span><span class="p">[</span><span class="nx">aliasName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">link</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">update</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_globalLinks</span><span class="p">[</span><span class="nx">aliasName</span><span class="p">],</span> <span class="nx">link</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">NO</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">NO</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">hasName</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_globalLinks</span><span class="p">[</span><span class="nx">aliasName</span><span class="p">];</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">hasLink</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">NO</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_globalLinks</span><span class="p">;</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Метод который позволяет создать <em>jQuery DOM</em> элемент с переданным набором параметров. <br />
+Работает быстрее чем <code>$('&lt;div&gt;')</code>.</p>
+
+<p><strong>Пример:</strong>  </p>
+
+<pre><code>    core.domBuilder('div', {
+        id: 'id',
+        name: 'name',
+        class: 'className',
+        html: 'text'
+    });
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">domBuilder</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">tagName</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">)</span> <span class="o">!==</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="s1">&#39;This method require jQuery to be defined!&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">domEl</span> <span class="o">=</span> <span class="p">[</span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="nx">tagName</span><span class="p">)];</span>
+
+    <span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">attr</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">domEl</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="nx">YES</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">merge</span><span class="p">(</span><span class="nx">$</span><span class="p">(),</span> <span class="nx">domEl</span><span class="p">);</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Инициализируем инстанс системы <code>pub/sub</code> событий.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">observatory</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">webapp</span><span class="p">.</span><span class="nx">Observatory</span><span class="p">();</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Самый быстрый метод глубокого клонирования. <br />
+Не поддерживает ссылки, функции и объекты с методами</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">clone</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">obj</span><span class="p">));</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Метод добавляющий в начале числа нули равное указанному значеню разрядов</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">formatDate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">digit</span><span class="p">,</span> <span class="nx">count</span><span class="p">,</span> <span class="nx">dummy</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">dummy</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="nx">count</span> <span class="o">||</span> <span class="p">(</span><span class="nx">count</span> <span class="o">=</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="nx">dummy</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="nx">count</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="nx">dummy</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="nx">digit</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="nx">count</span><span class="p">);</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>Метод позволяющи работать с датой в формате timestamp форматирую ее для дальнейшей работы. <br />
+Принимает следующие параметры которые влияют на результат выполнения метода:</p>
+
+<ul>
+<li><p><code>time</code> - (<em>object</em>) Время в формате <em>timestamp</em> или в строковом формате который может распарсить 
+<code>Date.parse()</code> (см. http://www.w3schools.com/jsref/jsref_parse.asp). Если параметр не передан, 
+то будет использовать время на момент вызова метода.</p></li>
+<li><p><code>format</code> - (<em>string</em>) Формат в котором необходимо вернуть указанное время. <br />
+<strong>Пример:</strong> <code>dd.mm.HH</code> <br />
+<strong>Результат:</strong> <code>28.1.2011</code></p></li>
+<li><p><code>asArray</code> - (<em>bool</em>) Аргумент указывающий на то в каком виде возвращать отформатированую дату. 
+Если он положителен то вернется массив, если нет то строка.</p></li>
+</ul>
+
+<p>Если не передан аргумент <code>format</code> или он является <em>falsy</em> значением, то методом будет возвращен 
+объект в котором содержиться разобранная дата по параметрам</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">dateUTC</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">time</span><span class="p">,</span> <span class="nx">format</span><span class="p">,</span> <span class="nx">asArray</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">date</span><span class="p">,</span>
+      <span class="nx">d</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>Задаем переданное время</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">d</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">time</span><span class="p">);</span>
+    <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>Если время небыло задано или был передан не правильный формат, то создаем объект текущей даты</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">d</span> <span class="o">||</span> <span class="nb">isNaN</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()))</span> <span class="p">{</span>
+      <span class="nx">d</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">date</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">wd</span><span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCDay</span><span class="p">(),</span>
+      <span class="nx">dd</span><span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCDate</span><span class="p">(),</span>
+      <span class="nx">h</span><span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCHours</span><span class="p">(),</span>
+      <span class="nx">mm</span><span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCMonth</span><span class="p">(),</span>
+      <span class="nx">m</span><span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCMinutes</span><span class="p">(),</span>
+      <span class="nx">s</span><span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCSeconds</span><span class="p">(),</span>
+      <span class="nx">hh</span><span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCFullYear</span><span class="p">(),</span>
+      <span class="nx">ms</span><span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">getUTCMilliseconds</span><span class="p">(),</span>
+      <span class="nx">WD</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">formatDate</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">getUTCDay</span><span class="p">()),</span>
+      <span class="nx">DD</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">formatDate</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">getUTCDate</span><span class="p">()),</span>
+      <span class="nx">H</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">formatDate</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">getUTCHours</span><span class="p">()),</span>
+      <span class="nx">M</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">formatDate</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">getUTCMinutes</span><span class="p">()),</span>
+      <span class="nx">S</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">formatDate</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">getUTCSeconds</span><span class="p">()),</span>
+      <span class="nx">MM</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">formatDate</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">getUTCMonth</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+      <span class="nx">HH</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">formatDate</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">getUTCFullYear</span><span class="p">(),</span> <span class="mi">4</span><span class="p">),</span>
+      <span class="nx">MS</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">formatDate</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">getUTCMilliseconds</span><span class="p">(),</span> <span class="mi">3</span><span class="p">),</span>
+      <span class="nx">timestamp</span><span class="o">:</span> <span class="nx">d</span><span class="p">.</span><span class="nx">valueOf</span><span class="p">()</span>
+    <span class="p">};</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">format</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">partialDate</span> <span class="o">=</span> <span class="nx">format</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">splitReg</span><span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">partialDate</span> <span class="o">&amp;&amp;</span> <span class="nx">partialDate</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">partialDate</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">date</span><span class="p">[</span><span class="nx">partialDate</span><span class="p">[</span><span class="nx">i</span><span class="p">]])</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">asArray</span><span class="p">)</span> <span class="p">{</span>
+              <span class="nx">partialDate</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">date</span><span class="p">[</span><span class="nx">partialDate</span><span class="p">[</span><span class="nx">i</span><span class="p">]];</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+              <span class="nx">format</span> <span class="o">=</span> <span class="nx">format</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nx">partialDate</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">date</span><span class="p">[</span><span class="nx">partialDate</span><span class="p">[</span><span class="nx">i</span><span class="p">]]);</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">asArray</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">partialDate</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">format</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">date</span><span class="p">;</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>Метод, который преобразует объект в массив. <br />
+В массив добавляется элемент формата:</p>
+
+<pre><code>    {
+        name: key,
+        value: object[key]
+    }
+</code></pre>
+
+<p>Если будет передан массив, то он веренется без изменения.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">toArray</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">returnData</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">item</span><span class="p">;</span>
+
+    <span class="nx">options</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span>
+      <span class="nx">value</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span>
+    <span class="p">},</span> <span class="nx">options</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">returnData</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">item</span> <span class="o">=</span> <span class="nx">returnData</span><span class="p">[</span><span class="nx">returnData</span><span class="p">.</span><span class="nx">push</span><span class="p">({})</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+            <span class="nx">item</span><span class="p">[</span><span class="nx">options</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">key</span><span class="p">;</span>
+            <span class="nx">item</span><span class="p">[</span><span class="nx">options</span><span class="p">.</span><span class="nx">value</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">returnData</span><span class="p">;</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>Метод, который преобразует массив в объект. <br />
+Массив должен приходить формата:</p>
+
+<pre><code>    [{
+        name: 'a',
+        value: 1
+    },{
+        name: 'b',
+        value: 2
+    }]
+</code></pre>
+
+<p>На выходе получим:</p>
+
+<pre><code>    {
+        a: 1,
+        b: 2
+    }
+</code></pre>
+
+<p>Если будет передан объект, то он вернется без обработки.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">toObject</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">returnData</span> <span class="o">=</span> <span class="p">{};</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">push</span> <span class="o">&amp;&amp;</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="nx">item</span><span class="p">,</span> <span class="nx">itemData</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">item</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+          <span class="nx">itemData</span> <span class="o">=</span> <span class="nx">returnData</span><span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">name</span><span class="p">];</span>
+
+          <span class="k">if</span> <span class="p">(</span><span class="nx">itemData</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">itemData</span><span class="p">.</span><span class="nx">push</span><span class="p">)</span> <span class="p">{</span>
+              <span class="nx">returnData</span><span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">itemData</span><span class="p">];</span>
+            <span class="p">}</span>
+            <span class="nx">returnData</span><span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">name</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">returnData</span><span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">returnData</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">returnData</span><span class="p">;</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>Метод для создания и получения куков. <br />
+Если в качестве аргумента передан массив, то метод вернет значения переданных значений в том 
+же порядке в каком они находились в массиве. <br />
+Если передан объект со значения, то метод создаст переменные с названиями как ключи полей и 
+значениями что указанны в этих полях</p>
+
+<p><strong>Пример:</strong>  </p>
+
+<ol>
+<li><p>Запись значений в куки</p>
+
+<pre><code>core.cookie({
+    firstName: 'Jon',
+    lastName: 'Doe'
+});
+</code></pre>
+
+<p><strong>Результат:</strong> <code>['Jon', 'Doe']</code></p></li>
+<li><p>Получение значений из кук</p>
+
+<pre><code>core.cookie(['firstName', 'lastName']);
+</code></pre>
+
+<p><strong>Результат:</strong> <code>['Jon', 'Doe']</code></p></li>
+<li><p>Получение значений из кук</p>
+
+<pre><code>core.cookie('firstName, lastName');
+</code></pre>
+
+<p><strong>Результат:</strong> <code>['Jon', 'Doe']</code></p></li>
+<li><p>Получение значений из кук</p>
+
+<pre><code>core.cookie('firstName, lastName, middleName');
+</code></pre>
+
+<p><strong>Результат:</strong> <code>['Jon', 'Doe', null]</code></p></li>
+<li><p>Удаление значения из кук</p>
+
+<pre><code>core.cookie({
+    lastName: null,
+    middleName: false
+});
+core.cookie('firstName, lastName, middleName');
+</code></pre>
+
+<p><strong>Результат:</strong> <code>['Jon', null, false]</code></p></li>
+<li><p>Запись значений в куки только на открытую сессию (после закрытия окна кука будет удалена)</p>
+
+<pre><code>core.cookie({
+    firstName: 'Jon',
+    lastName: 'Doe'
+}, true);
+</code></pre></li>
+<li><p>Запись в куку объекта</p>
+
+<pre><code>core.cookie({
+    city: {
+        name: 'Samara',
+        location: []
+    }
+});
+</code></pre>
+
+<p><strong>Результат:</strong> <code>[{name: 'Samara', location: []}]</code></p></li>
+</ol>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">cookie</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">params</span><span class="p">,</span> <span class="nx">isSessionCookie</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">reg</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">name</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\s+/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;=([^;]*)&#39;</span><span class="p">,</span> <span class="s1">&#39;gi&#39;</span><span class="p">),</span>
+          <span class="nx">result</span> <span class="o">=</span> <span class="nx">reg</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="nx">result</span> <span class="o">&amp;&amp;</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+      <span class="p">},</span>
+      <span class="nx">addedParams</span> <span class="o">=</span> <span class="p">[];</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>Если параметр не передан, то возвращаем весь объект кук</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">;</span>
+    <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>Обработка на случай если аргумент передали в качестве строки</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">params</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">params</span> <span class="k">instanceof</span> <span class="nb">Array</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">list</span> <span class="o">=</span> <span class="p">[];</span>
+
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">list</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">get</span><span class="p">(</span><span class="nx">params</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">list</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">cookieArr</span> <span class="o">=</span> <span class="p">[</span><span class="nx">key</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">params</span><span class="p">[</span><span class="nx">key</span><span class="p">]),</span> <span class="s1">&#39;path=/&#39;</span><span class="p">,</span> <span class="s1">&#39;expires=Mon, 01-Jan-&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">params</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="s1">&#39;1900&#39;</span> <span class="o">:</span> <span class="s1">&#39;2100&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; 00:00:00 GMT&#39;</span><span class="p">];</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>Если у нас кука должна быть сессионной, то мы удаляем дату <code>expires</code></p>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="k">if</span> <span class="p">(</span><span class="nx">isSessionCookie</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">cookieArr</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span>
+          <span class="p">}</span>
+          <span class="nx">addedParams</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <p>Записываем значение куки</p>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span> <span class="o">=</span> <span class="nx">cookieArr</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">callee</span><span class="p">(</span><span class="nx">addedParams</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p>Указываем ссылку на конструктор</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nb">window</span><span class="p">.</span><span class="nx">WebApp</span><span class="p">.</span><span class="nx">Core</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="o">:</span> <span class="nb">window</span><span class="p">.</span><span class="nx">WebApp</span><span class="p">.</span><span class="nx">Core</span>
+<span class="p">};</span>
+
+<span class="nb">window</span><span class="p">.</span><span class="nx">WebApp</span><span class="p">.</span><span class="nx">Core</span><span class="p">.</span><span class="nx">registerTransit</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">bindHandler</span><span class="p">,</span> <span class="nx">unbindHandler</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_transits</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_transits</span> <span class="o">=</span> <span class="p">{});</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">bindHandler</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">();</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_transits</span><span class="p">[</span><span class="nx">name</span><span class="p">])</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Transit with name: &#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39; was already registered.&#39;</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_transits</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">bind</span><span class="o">:</span> <span class="nx">bindHandler</span><span class="p">,</span>
+        <span class="nx">unbind</span><span class="o">:</span> <span class="nx">unbindHandler</span>
+      <span class="p">};</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Wrong arguments type! Should be &quot;string&quot; + &quot;function&quot; but get &quot;&#39;</span> <span class="o">+</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot; and &quot;&#39;</span> <span class="o">+</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">bindHandler</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

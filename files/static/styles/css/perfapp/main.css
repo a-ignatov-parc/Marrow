@@ -1,0 +1,11 @@
+/* line 1, ../../scss/perfapp/main.scss */
+.l-wrapper {
+  font: 12px Arial, Helvetica, sans-serif;
+}
+
+/* line 5, ../../scss/perfapp/main.scss */
+.b-info {
+  float: left;
+  width: 25%;
+  font-size: 11px;
+}

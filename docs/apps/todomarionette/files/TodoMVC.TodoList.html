@@ -1,0 +1,61 @@
+<!DOCTYPE html>  <html> <head>   <title>TodoMVC.TodoList.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="TodoMVC.Layout.html">                 TodoMVC.Layout.js               </a>                                           <a class="source" href="TodoMVC.TodoList.Views.html">                 TodoMVC.TodoList.Views.js               </a>                                           <a class="source" href="TodoMVC.TodoList.html">                 TodoMVC.TodoList.js               </a>                                           <a class="source" href="TodoMVC.Todos.html">                 TodoMVC.Todos.js               </a>                                           <a class="source" href="TodoMVC.html">                 TodoMVC.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               TodoMVC.TodoList.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/* jshint -W097 */</span>
+<span class="cm">/*global TodoMVC */</span>
+<span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="nx">TodoMVC</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;TodoList&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">TodoList</span><span class="p">,</span> <span class="nx">App</span><span class="p">,</span> <span class="nx">Backbone</span><span class="p">,</span> <span class="nx">Marionette</span><span class="p">,</span> <span class="nx">$</span><span class="p">,</span> <span class="nx">_</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>TodoList Router</h2>
+
+<p>Handle routes to show the active vs complete todo items</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">TodoList</span><span class="p">.</span><span class="nx">Router</span> <span class="o">=</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">AppRouter</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+    <span class="nx">appRoutes</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s1">&#39;*filter&#39;</span><span class="o">:</span> <span class="s1">&#39;filterItems&#39;</span>
+    <span class="p">}</span>
+  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h2>TodoList Controller (Mediator)</h2>
+
+<p>Control the workflow and logic that exists at the application
+level, above the implementation detail of views and models</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">TodoList</span><span class="p">.</span><span class="nx">Controller</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">todoList</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">App</span><span class="p">.</span><span class="nx">Todos</span><span class="p">.</span><span class="nx">TodoList</span><span class="p">();</span>
+  <span class="p">};</span>
+
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">TodoList</span><span class="p">.</span><span class="nx">Controller</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Start the app by showing the appropriate views
+and fetching the list of todo items, if there are any</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">showHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">todoList</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">showFooter</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">todoList</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">showTodoList</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">todoList</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">todoList</span><span class="p">.</span><span class="nx">fetch</span><span class="p">();</span>
+    <span class="p">},</span>
+
+    <span class="nx">showHeader</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">todoList</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">App</span><span class="p">.</span><span class="nx">Layout</span><span class="p">.</span><span class="nx">Header</span><span class="p">({</span>
+        <span class="nx">collection</span><span class="o">:</span> <span class="nx">todoList</span>
+      <span class="p">});</span>
+      <span class="nx">App</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">header</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">showFooter</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">todoList</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">footer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">App</span><span class="p">.</span><span class="nx">Layout</span><span class="p">.</span><span class="nx">Footer</span><span class="p">({</span>
+        <span class="nx">collection</span><span class="o">:</span> <span class="nx">todoList</span>
+      <span class="p">});</span>
+      <span class="nx">App</span><span class="p">.</span><span class="nx">footer</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">footer</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">showTodoList</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">todoList</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">App</span><span class="p">.</span><span class="nx">main</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="k">new</span> <span class="nx">TodoList</span><span class="p">.</span><span class="nx">Views</span><span class="p">.</span><span class="nx">ListView</span><span class="p">({</span>
+        <span class="nx">collection</span><span class="o">:</span> <span class="nx">todoList</span>
+      <span class="p">}));</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Set the filter to show complete or all items</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">filterItems</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">filter</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s1">&#39;todoList:filter&#39;</span><span class="p">,</span> <span class="nx">filter</span><span class="p">.</span><span class="nx">trim</span><span class="p">()</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h2>TodoList Initializer</h2>
+
+<p>Get the TodoList up and running by initializing the mediator
+when the the application is started, pulling in all of the
+existing Todo items and displaying them.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">TodoList</span><span class="p">.</span><span class="nx">addInitializer</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TodoList</span><span class="p">.</span><span class="nx">Controller</span><span class="p">();</span>
+    <span class="nx">controller</span><span class="p">.</span><span class="nx">router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TodoList</span><span class="p">.</span><span class="nx">Router</span><span class="p">({</span>
+      <span class="nx">controller</span><span class="o">:</span> <span class="nx">controller</span>
+    <span class="p">});</span>
+
+    <span class="nx">controller</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

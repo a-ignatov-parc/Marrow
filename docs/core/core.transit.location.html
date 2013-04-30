@@ -1,0 +1,74 @@
+<!DOCTYPE html>  <html> <head>   <title>core.transit.location.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="core.html">                 core.js               </a>                                           <a class="source" href="core.loader.html">                 core.loader.js               </a>                                           <a class="source" href="core.observatory.html">                 core.observatory.js               </a>                                           <a class="source" href="core.transit.jquery.html">                 core.transit.jquery.js               </a>                                           <a class="source" href="core.transit.location.html">                 core.transit.location.js               </a>                                           <a class="source" href="core.utils.html">                 core.utils.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               core.transit.location.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h2>version: 1.0.2</h2>
+
+<p><strong>История версий:</strong>  </p>
+
+<ul>
+<li><p><code>1.0.2</code> - Исправлена ошибка в работе транзита, когда урл в песочнице проставлялся только после 
+второй смены урла основной страницы.</p></li>
+<li><p><code>1.0.1</code> - Добавлена проверка существование <code>jQuery</code>, как зависимость для работы + рефакторинг 
+кода.</p></li>
+<li><p><code>1.0.0</code> - Транзит для хеша в урле вынесен в отдельный файл.</p></li>
+</ul>
+
+<p>После запуска данного транзита все изменения хеша в урле песочницы будут автоматически 
+транслироваться на основной урл главной страницы, как и наоборот.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">webapp</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Объявляем локальные переменные</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">checkUrlTimer</span><span class="p">,</span>
+    <span class="nx">$sandbox</span><span class="p">,</span>
+    <span class="nx">$window</span><span class="p">,</span>
+    <span class="nx">eventId</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Регистрируем транзит</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">webapp</span><span class="p">.</span><span class="nx">Core</span><span class="p">.</span><span class="nx">registerTransit</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nb">window</span><span class="p">,</span> <span class="nx">sandbox</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Добавлена возможность отключать использование транзита через опции приложения.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">try</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">loadOptions</span><span class="p">.</span><span class="nx">disableTransits</span><span class="p">.</span><span class="nx">location</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">)</span> <span class="o">!==</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;This transit require jQuery to be defined!&#39;</span><span class="p">);</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Получаем ссылку на <code>jQuery</code> объект <code>window</code> из песочницы необходимый для навешивания 
+событий и указания в качестве контекста поиска.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">$sandbox</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">sandbox</span><span class="p">,</span> <span class="nx">sandbox</span><span class="p">);</span>
+    <span class="nx">$window</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">sandboxRoute</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getLocationHash</span><span class="p">(),</span>
+      <span class="nx">windowRoute</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getLocationHash</span><span class="p">(</span><span class="nb">window</span><span class="p">),</span>
+      <span class="nx">checkUrl</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">newSandboxRoute</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getLocationHash</span><span class="p">(),</span>
+          <span class="nx">newWindowRoute</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getLocationHash</span><span class="p">(</span><span class="nb">window</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">sandboxRoute</span> <span class="o">!=</span> <span class="nx">newSandboxRoute</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">windowRoute</span> <span class="o">=</span> <span class="nx">sandboxRoute</span> <span class="o">=</span> <span class="nx">newSandboxRoute</span><span class="p">;</span>
+          <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">hash</span> <span class="o">=</span> <span class="nx">windowRoute</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">windowRoute</span> <span class="o">!=</span> <span class="nx">newWindowRoute</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">sandboxRoute</span> <span class="o">=</span> <span class="nx">windowRoute</span> <span class="o">=</span> <span class="nx">newWindowRoute</span><span class="p">;</span>
+          <span class="nx">sandbox</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">hash</span> <span class="o">=</span> <span class="nx">sandboxRoute</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">},</span> <span class="k">this</span><span class="p">);</span>
+
+    <span class="nx">eventId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateId</span><span class="p">();</span>
+
+    <span class="k">if</span> <span class="p">((</span><span class="s1">&#39;onhashchange&#39;</span> <span class="k">in</span> <span class="nb">window</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">$window</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;hashchange.marrow&#39;</span> <span class="o">+</span> <span class="nx">eventId</span><span class="p">,</span> <span class="nx">checkUrl</span><span class="p">);</span>
+      <span class="nx">$sandbox</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;hashchange.marrow&#39;</span> <span class="o">+</span> <span class="nx">eventId</span><span class="p">,</span> <span class="nx">checkUrl</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">checkUrlTimer</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(</span><span class="nx">checkUrl</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+    <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>При инициализации убеждаемся что в песочнице проставлен урл как у основного документа</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">windowRoute</span> <span class="o">=</span> <span class="nx">sandboxRoute</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Синхронизируем роуты до начала инициализации приложения</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">checkUrl</span><span class="p">();</span>
+  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nb">window</span><span class="p">,</span> <span class="nx">sandbox</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">loadOptions</span><span class="p">.</span><span class="nx">disableTransits</span><span class="p">.</span><span class="nx">location</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">)</span> <span class="o">!==</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;This transit require jQuery to be defined!&#39;</span><span class="p">);</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">checkUrlTimer</span> <span class="o">&amp;&amp;</span> <span class="nx">clearInterval</span><span class="p">(</span><span class="nx">checkUrlTimer</span><span class="p">);</span>
+    <span class="nx">$sandbox</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span><span class="s1">&#39;.marrow&#39;</span> <span class="o">+</span> <span class="nx">eventId</span><span class="p">);</span>
+    <span class="nx">$window</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span><span class="s1">&#39;.marrow&#39;</span> <span class="o">+</span> <span class="nx">eventId</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">})(</span><span class="nb">window</span><span class="p">.</span><span class="nx">WebApp</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

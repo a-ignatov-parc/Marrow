@@ -1,0 +1,18 @@
+@import 'layout.scss';
+
+.b-columns {
+	display: block;
+	overflow: hidden;
+}
+
+.b-column {
+	float: left;
+	width: 33.33%;
+	display: block;
+}
+
+.b-column--last {
+	float: none;
+	width: auto;
+	overflow: hidden;
+}

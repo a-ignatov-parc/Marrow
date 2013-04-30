@@ -1,0 +1,11 @@
+/* line 2, ../../scss/todomarionette/app.scss */
+#todoapp.filter-active #todo-list .completed,
+#todoapp.filter-completed #todo-list .active {
+  display: none;
+}
+
+/* line 7, ../../scss/todomarionette/app.scss */
+#main,
+#footer {
+  display: none;
+}

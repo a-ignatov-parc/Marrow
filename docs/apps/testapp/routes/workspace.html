@@ -1,0 +1,113 @@
+<!DOCTYPE html>  <html> <head>   <title>workspace.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               workspace.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="nx">App</span><span class="p">.</span><span class="nx">Routers</span><span class="p">.</span><span class="nx">Workspace</span> <span class="o">=</span> <span class="nx">App</span><span class="p">.</span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Router</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="nx">defaultPage</span><span class="o">:</span> <span class="s1">&#39;gallery&#39;</span><span class="p">,</span>
+  <span class="nx">namedParam</span><span class="o">:</span> <span class="sr">/:\w+/g</span><span class="p">,</span>
+  <span class="nx">splatParam</span><span class="o">:</span> <span class="sr">/\*\w+/g</span><span class="p">,</span>
+  <span class="nx">escapeRegExp</span><span class="o">:</span> <span class="sr">/[\-\[\]{}()+?.,\\\^$|#\s]/g</span><span class="p">,</span>
+
+  <span class="nx">routes</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s1">&#39;&#39;</span><span class="o">:</span> <span class="s1">&#39;gallery&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;index&#39;</span><span class="o">:</span> <span class="s1">&#39;index&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;gallery&#39;</span><span class="o">:</span> <span class="s1">&#39;gallery&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;gallery/:type&#39;</span><span class="o">:</span> <span class="s1">&#39;gallery&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;gallery/:type/:id&#39;</span><span class="o">:</span> <span class="s1">&#39;gallery&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;repair_map&#39;</span><span class="o">:</span> <span class="s1">&#39;repairMap&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;apartment_plan&#39;</span><span class="o">:</span> <span class="s1">&#39;apartmentPlan&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;apartment_plan/:id&#39;</span><span class="o">:</span> <span class="s1">&#39;apartmentPlan&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;:page&#39;</span><span class="o">:</span> <span class="s1">&#39;processWrongRoute&#39;</span>
+  <span class="p">},</span>
+
+  <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">prevRoute</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">currentRoute</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Метод для инициализации бандлов. Вызывается после инициализации роутера</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">createBundles</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">initData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">core</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Создаем источники данных</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;User&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">view</span><span class="o">:</span> <span class="nx">NO</span><span class="p">,</span>
+        <span class="nx">initData</span><span class="o">:</span> <span class="nx">initData</span><span class="p">.</span><span class="nx">User</span>
+      <span class="p">})</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Создаем вью</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;Gallery&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">model</span><span class="o">:</span> <span class="nx">NO</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;Popup&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">model</span><span class="o">:</span> <span class="nx">NO</span><span class="p">,</span>
+        <span class="nx">multiple</span><span class="o">:</span> <span class="nx">YES</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;Hint&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">model</span><span class="o">:</span> <span class="nx">NO</span><span class="p">,</span>
+        <span class="nx">multiple</span><span class="o">:</span> <span class="nx">YES</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;Pad&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">model</span><span class="o">:</span> <span class="nx">NO</span><span class="p">,</span>
+        <span class="nx">multiple</span><span class="o">:</span> <span class="nx">YES</span>
+      <span class="p">});</span>
+  <span class="p">},</span>
+
+  <span class="nx">processWrongRoute</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">defaultPage</span><span class="p">);</span>
+  <span class="p">},</span>
+
+  <span class="nx">checkData</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">YES</span><span class="p">;</span>
+  <span class="p">},</span>
+
+  <span class="nx">index</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;index&#39;</span><span class="p">,</span>
+      <span class="nx">location</span> <span class="o">=</span> <span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">checkData</span><span class="p">(</span><span class="nx">name</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">));</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">core</span>
+        <span class="p">.</span><span class="nx">unload</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">renderStream</span><span class="p">([</span><span class="s1">&#39;Header&#39;</span><span class="cm">/*, &#39;Map&#39;*/</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="nx">repairMap</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;repair_map&#39;</span><span class="p">,</span>
+      <span class="nx">location</span> <span class="o">=</span> <span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">checkData</span><span class="p">(</span><span class="nx">name</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">));</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">core</span>
+        <span class="p">.</span><span class="nx">unload</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">renderStream</span><span class="p">([</span><span class="s1">&#39;Header&#39;</span><span class="p">,</span> <span class="s1">&#39;RepairInfo&#39;</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="nx">apartmentPlan</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;apartment_plan&#39;</span><span class="p">,</span>
+      <span class="nx">location</span> <span class="o">=</span> <span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+
+    <span class="nx">id</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">location</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">checkData</span><span class="p">(</span><span class="nx">name</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">));</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">core</span>
+        <span class="p">.</span><span class="nx">unload</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">renderStream</span><span class="p">([</span><span class="s1">&#39;Header&#39;</span><span class="p">]);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">id</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">core</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="s1">&#39;Plan&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="nx">planId</span><span class="o">:</span> <span class="nx">id</span>
+        <span class="p">});</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">core</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="s1">&#39;ApartmentPlan&#39;</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="nx">gallery</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;gallery&#39;</span><span class="p">,</span>
+      <span class="nx">location</span> <span class="o">=</span> <span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+
+    <span class="nx">type</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">location</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">type</span><span class="p">);</span>
+    <span class="nx">id</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">location</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">checkData</span><span class="p">(</span><span class="nx">name</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">));</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">core</span>
+        <span class="p">.</span><span class="nx">unload</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="s1">&#39;Gallery&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

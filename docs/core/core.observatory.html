@@ -1,0 +1,275 @@
+<!DOCTYPE html>  <html> <head>   <title>core.observatory.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="core.html">                 core.js               </a>                                           <a class="source" href="core.loader.html">                 core.loader.js               </a>                                           <a class="source" href="core.observatory.html">                 core.observatory.js               </a>                                           <a class="source" href="core.transit.jquery.html">                 core.transit.jquery.js               </a>                                           <a class="source" href="core.transit.location.html">                 core.transit.location.js               </a>                                           <a class="source" href="core.utils.html">                 core.utils.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               core.observatory.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h2>version: 1.1.4</h2>
+
+<p>Объект реализующий паттерн <em>pub/sub</em> с полной поддержкой событий <em>jQuery</em> но работающий на много 
+быстрее (http://jsperf.com/custom-pub-sub-test/3)</p>
+
+<p><strong>Пример:</strong>  </p>
+
+<ol>
+<li><p>Выстреливает глобальное событие <code>event_name</code> и передает в обработчик два аргумента;</p>
+
+<pre><code>core.observatory.trigger('event_name', [argument1, argument2]);
+</code></pre></li>
+<li><p>Создание обработчика на глобальное событие <code>event_name</code>, который принимает в качестве 
+аргументов объект <em>jQuery</em> события и два аргумента переданные при выстреливании события</p>
+
+<pre><code>core.observatory.on('event_name', function(event, argument1, argument2) {
+    code here
+});
+</code></pre></li>
+<li><p>Создание одного обработчика на несколько глобальных событий <code>event_name1</code> и <code>event_name2</code>.</p>
+
+<pre><code>core.observatory.on('event_name1 event_name2', function(event) {
+    code here
+});
+</code></pre></li>
+<li><p>Создание обработчика на глобальное событие <code>event_name</code>, который принимает в качестве 
+аргументов объект <em>jQuery</em> события и два аргумента переданные при выстреливании события, 
+а так же обработчик вызывается с указаным контекстом (передается третьим аргументом)</p>
+
+<pre><code>core.observatory.on('event_name', function(event, argument1, argument2) {
+    code here
+}, this);
+</code></pre></li>
+<li><p>Отписываемся от события</p>
+
+<pre><code>core.observatory.off('event_name');
+</code></pre></li>
+</ol>
+
+<p><strong>Набор тестов на производительность:</strong></p>
+
+<ol>
+<li><p>http://jsperf.com/marrow-observatory/4 - Самый суровый кейс. <br />
+Каждый цикл навешивание событий -> Выстреливание -> Удаление события -> Выстреливание.</p></li>
+<li><p>http://jsperf.com/marrow-observatory-vs-jquery-trigger-events/4 - Самый простой кейс. <br />
+Навешивание событий и в каждом цыкле только выстреливание.</p></li>
+<li><p>http://jsperf.com/marrow-observatory-vs-jquery-bind-events-create-test - Тест на скорость 
+создания обсерватории и работы с событиями.</p></li>
+</ol>
+
+<p><strong>История версий:</strong>  </p>
+
+<ul>
+<li><p><code>1.1.4</code> - Оптимизация методов для более быстрой работы.</p></li>
+<li><p><code>1.1.3</code> - Исправлена ошибка с подменной контекста у одинаковых обработчиков разных инстансов 
+одного и того же класса.</p></li>
+<li><p><code>1.1.2</code> - Вызов обработчика событий обернут в <code>try..catch</code> на случай если внутри обработчика 
+произойдет ошибка. В противном случае ошибка внутри обработчика может привести к обрыву цепочки 
+вызова обработчиков.</p></li>
+<li><p><code>1.1.1</code> - Исправлена ошибка когда метод <code>off</code> не учитывал переданный обработчик и контекст.</p></li>
+<li><p><code>1.1.0</code> - Полностью переписаны все методы для ускорения производительности и исправления 
+ошибок.</p></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre><span class="nb">window</span><span class="p">.</span><span class="nx">WebApp</span> <span class="o">||</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">WebApp</span> <span class="o">=</span> <span class="p">{});</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">WebApp</span><span class="p">.</span><span class="nx">Observatory</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">regex</span> <span class="o">=</span> <span class="sr">/\s+/</span><span class="p">,</span>
+    <span class="nx">contexts</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="nx">handlers</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="nx">eventMap</span> <span class="o">=</span> <span class="p">{},</span>
+    <span class="nx">mutedNamesMap</span> <span class="o">=</span> <span class="p">{},</span>
+    <span class="nx">mutedHandlerMap</span> <span class="o">=</span> <span class="p">{};</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">on</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">eventName</span><span class="p">,</span> <span class="nx">handler</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">handlerId</span> <span class="o">=</span> <span class="nx">handlers</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="nx">name</span><span class="p">,</span>
+      <span class="nx">event</span><span class="p">,</span>
+      <span class="nx">events</span><span class="p">,</span>
+      <span class="nx">namespace</span><span class="p">,</span>
+      <span class="nx">delimiterIndex</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">eventName</span> <span class="o">||</span> <span class="o">!</span><span class="nx">handler</span> <span class="o">||</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">handler</span><span class="p">)</span> <span class="o">!==</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;No event name or handler! Skipping...&#39;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">eventName</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">events</span> <span class="o">=</span> <span class="nx">eventName</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">regex</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">events</span> <span class="o">=</span> <span class="p">[</span><span class="nx">eventName</span><span class="p">];</span>
+    <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Добавляем обработчик в коллекцию обработчиков</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">handlers</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">handler</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Добавляем контекст в коллекцию контекстов</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">contexts</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">context</span><span class="p">);</span>
+
+    <span class="k">for</span> <span class="p">(;</span><span class="nx">events</span><span class="p">.</span><span class="nx">length</span><span class="p">;)</span> <span class="p">{</span>
+      <span class="nx">name</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="nx">namespace</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="nx">event</span> <span class="o">=</span> <span class="nx">events</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+      <span class="nx">delimiterIndex</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">lastIndexOf</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">delimiterIndex</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">name</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">delimiterIndex</span><span class="p">);</span>
+        <span class="nx">namespace</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="nx">delimiterIndex</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">name</span> <span class="o">=</span> <span class="nx">event</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">name</span> <span class="o">&amp;&amp;</span> <span class="nx">namespace</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">eventMap</span><span class="p">[</span><span class="nx">event</span><span class="p">])</span> <span class="p">{</span>
+          <span class="nx">eventMap</span><span class="p">[</span><span class="nx">event</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="p">}</span>
+        <span class="nx">eventMap</span><span class="p">[</span><span class="nx">event</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">handlerId</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">namespace</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">eventMap</span><span class="p">[</span><span class="nx">namespace</span><span class="p">])</span> <span class="p">{</span>
+          <span class="nx">eventMap</span><span class="p">[</span><span class="nx">namespace</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="p">}</span>
+        <span class="nx">eventMap</span><span class="p">[</span><span class="nx">namespace</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">handlerId</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">eventMap</span><span class="p">[</span><span class="nx">name</span><span class="p">])</span> <span class="p">{</span>
+          <span class="nx">eventMap</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="p">}</span>
+        <span class="nx">eventMap</span><span class="p">[</span><span class="nx">name</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">handlerId</span><span class="p">);</span>
+      <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Проверяем небыло ли "заглушено" событие. <br />
+Если да, то делаем заглушение текущего обработчика.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span><span class="nx">mutedNamesMap</span><span class="p">[</span><span class="nx">event</span><span class="p">]</span> <span class="o">||</span> <span class="nx">mutedNamesMap</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">||</span> <span class="nx">mutedNamesMap</span><span class="p">[</span><span class="nx">namespace</span><span class="p">])</span> <span class="p">{</span>
+        <span class="nx">mutedHandlerMap</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">]</span> <span class="o">=</span> <span class="nx">handlers</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">];</span>
+        <span class="nx">handlers</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">off</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">eventName</span><span class="p">,</span> <span class="nx">handler</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">name</span><span class="p">,</span>
+      <span class="nx">event</span><span class="p">,</span>
+      <span class="nx">events</span><span class="p">,</span>
+      <span class="nx">handlerId</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">eventName</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">events</span> <span class="o">=</span> <span class="nx">eventName</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">regex</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">events</span> <span class="o">=</span> <span class="p">[</span><span class="nx">eventName</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(;</span><span class="nx">events</span><span class="p">.</span><span class="nx">length</span><span class="p">;)</span> <span class="p">{</span>
+      <span class="nx">name</span> <span class="o">=</span> <span class="nx">events</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+      <span class="nx">event</span> <span class="o">=</span> <span class="nx">eventMap</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">handlerId</span> <span class="o">=</span> <span class="nx">event</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+
+          <span class="k">if</span> <span class="p">(</span><span class="nx">handlers</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">])</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">handler</span> <span class="o">||</span> <span class="nx">handler</span> <span class="o">==</span> <span class="nx">handlers</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">])</span> <span class="p">{</span>
+              <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">context</span> <span class="o">||</span> <span class="nx">contexts</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">]</span> <span class="o">==</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Удаляем обработчик и контекст</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="nx">handlers</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">]</span> <span class="o">=</span> <span class="nx">contexts</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+              <span class="p">}</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">trigger</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">eventName</span><span class="p">,</span> <span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">events</span><span class="p">,</span>
+      <span class="nx">handler</span><span class="p">,</span>
+      <span class="nx">handlerId</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">eventName</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;No event name! Skipping...&#39;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">eventName</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">eventName</span> <span class="o">=</span> <span class="nx">eventName</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">events</span> <span class="o">=</span> <span class="nx">eventMap</span><span class="p">[</span><span class="nx">eventName</span><span class="p">];</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">events</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">events</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">handlerId</span> <span class="o">=</span> <span class="nx">events</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="nx">handler</span> <span class="o">=</span> <span class="nx">handlers</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">];</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">handler</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Пытаемся вызвать обработчик событий с подготовленными аргументами</p>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="k">try</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Проверяем если аргумент <code>params</code> это массив, то выполняем более сложную и медленную 
+операцию вызова обработчика события. <br />
+Если же <code>params</code> не определен или не является массивом, то выполняем быстрый вызов 
+обработчика.</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">concat</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;number&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">params</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+              <span class="nx">handler</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">contexts</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">],</span> <span class="p">[</span><span class="nx">eventName</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nx">params</span><span class="p">));</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+              <span class="nx">handler</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">contexts</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">],</span> <span class="nx">eventName</span><span class="p">,</span> <span class="nx">params</span><span class="p">);</span>
+            <span class="p">}</span>
+          <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Если вызов прошел не успешно выдаем в консоль ошибку и продолжаем дальше</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">mute</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">eventName</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">name</span><span class="p">,</span>
+      <span class="nx">event</span><span class="p">,</span>
+      <span class="nx">events</span><span class="p">,</span>
+      <span class="nx">handlerId</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">eventName</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;No event name! Skipping...&#39;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">eventName</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">events</span> <span class="o">=</span> <span class="nx">eventName</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">regex</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">events</span> <span class="o">=</span> <span class="p">[</span><span class="nx">eventName</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(;</span><span class="nx">events</span><span class="p">.</span><span class="nx">length</span><span class="p">;)</span> <span class="p">{</span>
+      <span class="nx">name</span> <span class="o">=</span> <span class="nx">events</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">mutedNamesMap</span><span class="p">[</span><span class="nx">name</span><span class="p">])</span> <span class="p">{</span>
+        <span class="nx">mutedNamesMap</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="nx">event</span> <span class="o">=</span> <span class="nx">eventMap</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">handlerId</span> <span class="o">=</span> <span class="nx">event</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">mutedHandlerMap</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">])</span> <span class="p">{</span>
+              <span class="nx">mutedHandlerMap</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">]</span> <span class="o">=</span> <span class="nx">handlers</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">];</span>
+              <span class="nx">handlers</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">unmute</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">eventName</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">name</span><span class="p">,</span>
+      <span class="nx">event</span><span class="p">,</span>
+      <span class="nx">events</span><span class="p">,</span>
+      <span class="nx">handlerId</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">eventName</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;No event name! Skipping...&#39;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">eventName</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">events</span> <span class="o">=</span> <span class="nx">eventName</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">regex</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">events</span> <span class="o">=</span> <span class="p">[</span><span class="nx">eventName</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(;</span><span class="nx">events</span><span class="p">.</span><span class="nx">length</span><span class="p">;)</span> <span class="p">{</span>
+      <span class="nx">name</span> <span class="o">=</span> <span class="nx">events</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+      <span class="nx">event</span> <span class="o">=</span> <span class="nx">eventMap</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">handlerId</span> <span class="o">=</span> <span class="nx">event</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+
+          <span class="k">if</span> <span class="p">(</span><span class="nx">mutedHandlerMap</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">])</span> <span class="p">{</span>
+            <span class="nx">handlers</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">]</span> <span class="o">=</span> <span class="nx">mutedHandlerMap</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">];</span>
+            <span class="k">delete</span> <span class="nx">mutedHandlerMap</span><span class="p">[</span><span class="nx">handlerId</span><span class="p">];</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

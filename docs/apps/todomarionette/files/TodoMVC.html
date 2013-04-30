@@ -1,0 +1,17 @@
+<!DOCTYPE html>  <html> <head>   <title>TodoMVC.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="TodoMVC.Layout.html">                 TodoMVC.Layout.js               </a>                                           <a class="source" href="TodoMVC.TodoList.Views.html">                 TodoMVC.TodoList.Views.js               </a>                                           <a class="source" href="TodoMVC.TodoList.html">                 TodoMVC.TodoList.js               </a>                                           <a class="source" href="TodoMVC.Todos.html">                 TodoMVC.Todos.js               </a>                                           <a class="source" href="TodoMVC.html">                 TodoMVC.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               TodoMVC.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/* jshint -W097 */</span>
+<span class="cm">/*global Backbone */</span>
+<span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">TodoMVC</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">Application</span><span class="p">();</span>
+
+<span class="nx">TodoMVC</span><span class="p">.</span><span class="nx">addRegions</span><span class="p">({</span>
+  <span class="nx">header</span><span class="o">:</span> <span class="s1">&#39;#header&#39;</span><span class="p">,</span>
+  <span class="nx">main</span><span class="o">:</span> <span class="s1">&#39;#main&#39;</span><span class="p">,</span>
+  <span class="nx">footer</span><span class="o">:</span> <span class="s1">&#39;#footer&#39;</span>
+<span class="p">});</span>
+
+<span class="nx">TodoMVC</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;initialize:after&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+<span class="p">});</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

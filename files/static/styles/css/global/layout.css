@@ -1,0 +1,270 @@
+/* line 9, ../../scss/common/reset.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+/* line 19, ../../scss/common/reset.scss */
+html {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* line 23, ../../scss/common/reset.scss */
+body {
+  line-height: 1;
+}
+
+/* line 27, ../../scss/common/reset.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 31, ../../scss/common/reset.scss */
+blockquote, q {
+  quotes: none;
+}
+
+/* line 38, ../../scss/common/reset.scss */
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+
+/* remember to define focus styles! */
+/* line 44, ../../scss/common/reset.scss */
+:focus {
+  outline: 0;
+}
+
+/* remember to highlight inserts somehow! */
+/* line 49, ../../scss/common/reset.scss */
+ins {
+  text-decoration: none;
+}
+
+/* line 53, ../../scss/common/reset.scss */
+del {
+  text-decoration: line-through;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+/* line 58, ../../scss/common/reset.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 63, ../../scss/common/reset.scss */
+textarea {
+  overflow: auto;
+  /* for IE */
+  resize: none;
+}
+
+/* line 68, ../../scss/common/reset.scss */
+fieldset {
+  border: 0 solid transparent;
+}
+
+/* =Main Styles
+__________________________________*/
+@font-face {
+  font-family: 'PT Sans';
+  src: url("../../fonts/PTSans-Bold.eot");
+  src: url("../../fonts/PTSans-Bold.eot?#iefix") format("embedded-opentype"), url("../../fonts/PTSans-Bold.ttf") format("truetype"), url("../../fonts/PTSans-Bold.svg#PTSansBold") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* line 13, ../../scss/common/global.scss */
+html, body {
+  height: 100%;
+}
+
+/* line 17, ../../scss/common/global.scss */
+html {
+  font-size: 100.01%;
+}
+
+/* line 21, ../../scss/common/global.scss */
+body {
+  font: 0.75em Arial, Helvetica, sans-serif;
+  /* 12px */
+  color: #2D3038;
+  background: #fff;
+  min-width: 1000px;
+}
+
+/* line 28, ../../scss/common/global.scss */
+input {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* line 32, ../../scss/common/global.scss */
+a {
+  color: #0078C7;
+  text-decoration: none;
+  outline: none;
+}
+
+/* line 38, ../../scss/common/global.scss */
+.g-clrfix {
+  zoom: 1;
+}
+
+/* line 42, ../../scss/common/global.scss */
+.g-clrfix:after {
+  content: '.';
+  display: block;
+  clear: both;
+  font: 0/0 a;
+  height: 0;
+  visibility: hidden;
+}
+
+/* line 51, ../../scss/common/global.scss */
+.g-scrollable {
+  height: 100%;
+  position: relative;
+  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Поломано в Google Chrome - http://code.google.com/p/chromium/issues/detail?id=124559 */
+  /*-webkit-overflow-scrolling: touch;*/
+}
+
+/* line 61, ../../scss/common/global.scss */
+.g-definition {
+  color: inherit !important;
+  text-decoration: none;
+}
+
+/* line 66, ../../scss/common/global.scss */
+.g-clickable {
+  cursor: pointer;
+}
+
+/* line 70, ../../scss/common/global.scss */
+.g-hidden {
+  display: none;
+}
+
+/* line 74, ../../scss/common/global.scss */
+.g-vis_hidden {
+  visibility: hidden;
+}
+
+/* line 78, ../../scss/common/global.scss */
+.g-floated {
+  float: left;
+}
+
+/* line 82, ../../scss/common/global.scss */
+.g-opacity {
+  opacity: 0;
+}
+
+/* line 86, ../../scss/common/global.scss */
+.g-text-overflow {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+}
+
+/* line 94, ../../scss/common/global.scss */
+.g-empty-placeholder {
+  color: #6d6d6d;
+}
+
+/* line 98, ../../scss/common/global.scss */
+.g-uppercase {
+  text-transform: uppercase;
+}
+
+/* line 102, ../../scss/common/global.scss */
+.g-ns {
+  -moz-user-select: none;
+  -o-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* line 111, ../../scss/common/global.scss */
+.g-nc-link {
+  color: inherit !important;
+  border-bottom: 1px dashed;
+}
+
+/* line 116, ../../scss/common/global.scss */
+.g-nb {
+  border: none;
+}
+
+/* line 120, ../../scss/common/global.scss */
+.g-delimiter {
+  width: 100%;
+  clear: both;
+  display: block;
+  height: 0;
+}
+
+/* line 127, ../../scss/common/global.scss */
+.g-rubl {
+  font-family: 'ALS Rubl';
+}
+
+/* line 131, ../../scss/common/global.scss */
+.g-bold {
+  font-weight: bold;
+}
+
+/* line 135, ../../scss/common/global.scss */
+.g-sup {
+  font-size: .7em;
+  vertical-align: super;
+  margin-top: -3px;
+  display: inline-block;
+}
+
+/* line 142, ../../scss/common/global.scss */
+.g-cursor_crosshair {
+  cursor: crosshair !important;
+}
+
+/* line 4, ../../scss/global/layout.scss */
+.l-layout {
+  min-height: 100%;
+  overflow: hidden;
+}
+
+/* line 10, ../../scss/global/layout.scss */
+.l-wrapper,
+.l-content {
+  height: 100%;
+}
+
+/* line 14, ../../scss/global/layout.scss */
+.l-container {
+  max-width: 1400px;
+  min-width: 1000px;
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>  <html> <head>   <title>TodoMVC.Layout.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="TodoMVC.Layout.html">                 TodoMVC.Layout.js               </a>                                           <a class="source" href="TodoMVC.TodoList.Views.html">                 TodoMVC.TodoList.Views.js               </a>                                           <a class="source" href="TodoMVC.TodoList.html">                 TodoMVC.TodoList.js               </a>                                           <a class="source" href="TodoMVC.Todos.html">                 TodoMVC.Todos.js               </a>                                           <a class="source" href="TodoMVC.html">                 TodoMVC.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               TodoMVC.Layout.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/* jshint -W097 */</span>
+<span class="cm">/*global TodoMVC */</span>
+<span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="nx">TodoMVC</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;Layout&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">Layout</span><span class="p">,</span> <span class="nx">App</span><span class="p">,</span> <span class="nx">Backbone</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Layout Header View</h2>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Layout</span><span class="p">.</span><span class="nx">Header</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">ItemView</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+    <span class="nx">template</span><span class="o">:</span> <span class="s1">&#39;#template-header&#39;</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>UI bindings create cached attributes that
+point to jQuery selected objects</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">ui</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">input</span><span class="o">:</span> <span class="s1">&#39;#new-todo&#39;</span>
+    <span class="p">},</span>
+
+    <span class="nx">events</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s1">&#39;keypress #new-todo&#39;</span><span class="o">:</span> <span class="s1">&#39;onInputKeypress&#39;</span>
+    <span class="p">},</span>
+
+    <span class="nx">onInputKeypress</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">ENTER_KEY</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+      <span class="nx">todoText</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">val</span><span class="p">().</span><span class="nx">trim</span><span class="p">();</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">which</span> <span class="o">===</span> <span class="nx">ENTER_KEY</span> <span class="o">&amp;&amp;</span> <span class="nx">todoText</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+          <span class="nx">title</span><span class="o">:</span> <span class="nx">todoText</span>
+        <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h2>Layout Footer View</h2>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Layout</span><span class="p">.</span><span class="nx">Footer</span> <span class="o">=</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">Layout</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+    <span class="nx">template</span><span class="o">:</span> <span class="s1">&#39;#template-footer&#39;</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>UI bindings create cached attributes that
+point to jQuery selected objects</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">ui</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">count</span><span class="o">:</span> <span class="s1">&#39;#todo-count strong&#39;</span><span class="p">,</span>
+      <span class="nx">itemsString</span><span class="o">:</span> <span class="s1">&#39;#todo-count span&#39;</span><span class="p">,</span>
+      <span class="nx">filters</span><span class="o">:</span> <span class="s1">&#39;#filters a&#39;</span><span class="p">,</span>
+      <span class="nx">clearCompleted</span><span class="o">:</span> <span class="s1">&#39;#clear-completed&#39;</span>
+    <span class="p">},</span>
+
+    <span class="nx">events</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s1">&#39;click #clear-completed&#39;</span><span class="o">:</span> <span class="s1">&#39;onClearClick&#39;</span>
+    <span class="p">},</span>
+
+    <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">listenTo</span><span class="p">(</span><span class="nx">App</span><span class="p">.</span><span class="nx">vent</span><span class="p">,</span> <span class="s1">&#39;todoList:filter&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateFilterSelection</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">listenTo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">collection</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateCount</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">onRender</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">updateCount</span><span class="p">();</span>
+    <span class="p">},</span>
+
+    <span class="nx">updateCount</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">count</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">getActive</span><span class="p">().</span><span class="nx">length</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">completed</span> <span class="o">=</span> <span class="nx">length</span> <span class="o">-</span> <span class="nx">count</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">count</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="nx">count</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">itemsString</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">count</span> <span class="o">===</span> <span class="mi">1</span> <span class="o">?</span> <span class="s1">&#39;item&#39;</span> <span class="o">:</span> <span class="s1">&#39;items&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; left&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">parent</span><span class="p">().</span><span class="nx">toggle</span><span class="p">(</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">completed</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">clearCompleted</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">clearCompleted</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s1">&#39;Clear completed (&#39;</span> <span class="o">+</span> <span class="nx">completed</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">clearCompleted</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
+      <span class="p">}</span>
+
+    <span class="p">},</span>
+
+    <span class="nx">updateFilterSelection</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">filter</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">filters</span>
+        <span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s1">&#39;selected&#39;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="s1">&#39;[href=&quot;#&#39;</span> <span class="o">+</span> <span class="nx">filter</span> <span class="o">+</span> <span class="s1">&#39;&quot;]&#39;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">&#39;selected&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">onClearClick</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">completed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">getCompleted</span><span class="p">();</span>
+      <span class="nx">completed</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">todo</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">todo</span><span class="p">.</span><span class="nx">destroy</span><span class="p">();</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

@@ -1,0 +1,17 @@
+@import '../common/reset.scss';
+@import '../common/global.scss';
+
+.l-layout {
+	min-height: 100%;
+	overflow: hidden;
+}
+
+.l-wrapper,
+.l-content {
+	height: 100%;
+}
+
+.l-container {
+	max-width: 1400px;
+	min-width: 1000px;
+}
