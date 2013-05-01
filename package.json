@@ -1,10 +1,10 @@
 {
 	"name": "Marrow",
-	"imgPath": "files/static/img",
-	"rootPath": "files/static/js",
-	"fontsPath": "files/static/fonts",
-	"cssPath": "files/static/styles/css",
-	"sassPath": "files/static/styles/scss",
+	"imgPath": "static/img",
+	"rootPath": "static/js",
+	"fontsPath": "static/fonts",
+	"cssPath": "static/styles/css",
+	"sassPath": "static/styles/scss",
 	"description": "Sandbox webapp loading framework with conditional recipes",
 	"url": "https://github.com/Parcsis/Marrow",
 	"keywords": [
@@ -34,5 +34,5 @@
 		"grunt-contrib-handlebars": ">=0.5.4"
 	},
 	"main": "marrow.js",
-	"version": "1.3.6-145"
+	"version": "1.3.6-147"
 }

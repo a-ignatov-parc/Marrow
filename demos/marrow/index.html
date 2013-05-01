@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>WebApp</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+		<!-- Init Section -->
+			<script type="text/javascript" src="../../static/js/loader.min.js"></script>
+			<script type="text/javascript" src="../../static/js/apps/testapp/location_dev.js"></script>
+			<script type="text/javascript" src="../../static/js/apps/testapp/files.js"></script>
+			<script type="text/javascript">
+				new WebApp.Loader('TestApp', {
+					loadOptions: {
+						recipe: 'marrow',
+						containerSelector: '.l-wrapper'
+					},
+					bootstrapData: {
+						User: {
+							FirstName: 'Jon',
+							LastName: 'Doe',
+							Email: 'jon.doe@gmail.com'
+						}
+					}
+				});
+			</script>
+		<!-- Init Section -->
+	</head>
+	<body>
+		<div class="l-wrapper"></div>
+	</body>
+</html>
