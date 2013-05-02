@@ -1,7 +1,12 @@
-// version: 1.2.17
+// version: 1.2.18
 // -------------
 // 
 // __История версий:__  
+// 
+// * `1.2.18` - Добавлена обработка секции `defered` в списке файлов. Все файлы указанные в этой 
+// секции будут загружаться после полной инициализации приложения. Если необходимо выполнить 
+// какой-то код после загрузки файлов из секции defered`, то необходимо в приложении объявить 
+// метод `afterDefered`.
 // 
 // * `1.2.17` - Исправлена ошибка загрузки файлов `base.min.js` и `libs.min.js`, когда в ресурсах
 // подобных секций даже нет. Рефакторинг путей для загрузки стилей.
@@ -251,8 +256,21 @@ window.WebApp.Loader.prototype = {
 		var Recipe = this.sandboxWindow.WebApp.Recipe,
 			Core = this.sandboxWindow.WebApp.Core,
 			complete = this.bind(function() {
+				var callback = null;
+
 				// Инициализируем веб-приложение так же создавая глобальную ссылку на него в объекте `window`
 				window[this.appName + (window[this.appName] ? this.sandboxWindow.App.generateId() : '')] = this.sandboxWindow.App.init(this.options.bootstrapData);
+
+				// Если в списке ресурсов обнаружена секция `defered`, то ее мы загружаем после инициализации 
+				// приложения.  
+				// В качестве колбека пытаемся получить метод `afterDefered`, если он не будет объявлен, то 
+				// файлы будут загружены без уведомления о завершении загрузки.
+				if (filesList.defered) {
+					if (typeof(this.sandboxWindow.App.afterDefered) === 'function') {
+						callback = this.sandboxWindow.App.afterDefered;
+					}
+					this.loader(filesList.defered, callback, true);
+				}
 			}, this),
 			filesList = this.options.loadOptions.resources,
 			resources = [];

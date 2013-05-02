@@ -18,7 +18,7 @@ WebApp.TodoAngular.resources = {
 		"styles/todomvc/base.css"
 	],
 
-	"app": [
+	"defered": [
 		"controllers/todoCtrl.js",
 		"services/todoStorage.js",
 		"directives/todoFocus.js",

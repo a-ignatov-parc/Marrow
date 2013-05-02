@@ -12,6 +12,10 @@ window.WebApp || (window.WebApp = {});
 window.WebApp.Dependencies = function(window) {
 	var filesList = [];
 
+	/*if (!window.$) {
+		filesList.push('system/jquery/jquery.min.js!order');
+	}*/
+
 	if (!window._) {
 		filesList.push('system/lodash.min.js!order');
 	}
