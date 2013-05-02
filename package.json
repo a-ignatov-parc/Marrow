@@ -34,5 +34,5 @@
 		"grunt-contrib-handlebars": ">=0.5.4"
 	},
 	"main": "marrow.js",
-	"version": "1.3.6-151"
+	"version": "1.3.6-176"
 }

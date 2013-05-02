@@ -85,7 +85,7 @@ window.WebApp.Core = function(webapp, window, sandbox) {
 		};
 
 	// Версия фреймворка `Marrow`.
-	this.version = '1.3.6-147';
+	this.version = '1.3.6-175';
 
 	// Ссылка для получения из песочницы объекта `window` основного документа в котором 
 	// инициализируется веб-приложение.
@@ -688,10 +688,13 @@ window.WebApp.Core.registerTransit = function(name, bindHandler, unbindHandler) 
 		})(jQuery.fn.init, jQuery.fn);
 	});
 })(window.WebApp);
-// version: 1.0.2
+// version: 1.0.3
 // -------------
 // 
 // __История версий:__  
+// 
+// * `1.0.3` - При включении транзита в песочнице отключается метод `pushState` благодаря чему все 
+// приложения принуждаются к работе с `location.hash`.
 // 
 // * `1.0.2` - Исправлена ошибка в работе транзита, когда урл в песочнице проставлялся только после 
 // второй смены урла основной страницы.
@@ -705,7 +708,8 @@ window.WebApp.Core.registerTransit = function(name, bindHandler, unbindHandler) 
 // транслироваться на основной урл главной страницы, как и наоборот.
 (function(webapp) {
 	// Объявляем локальные переменные
-	var checkUrlTimer,
+	var originalPushState,
+		checkUrlTimer,
 		$sandbox,
 		$window,
 		eventId;
@@ -748,6 +752,15 @@ window.WebApp.Core.registerTransit = function(name, bindHandler, unbindHandler) 
 
 		eventId = this.generateId();
 
+		// Хак отключающий `pushState` в песочнице принуждающий приложения запущенные в ней использовать 
+		// `location.hash` вместо `html5.history` для работы с урлами.
+		// 
+		// [TODO] Реализовать правильную работу с `pushState`: https://trello.com/c/ZAGJ5aOK
+		if (window.history && window.history.pushState) {
+			originalPushState = sandbox.history.pushState;
+			sandbox.history.pushState = null;
+		}
+
 		if (('onhashchange' in window)) {
 			$window.on('hashchange.marrow' + eventId, checkUrl);
 			$sandbox.on('hashchange.marrow' + eventId, checkUrl);
@@ -776,6 +789,9 @@ window.WebApp.Core.registerTransit = function(name, bindHandler, unbindHandler) 
 		checkUrlTimer && clearInterval(checkUrlTimer);
 		$sandbox.off('.marrow' + eventId);
 		$window.off('.marrow' + eventId);
+
+		// Востанавливаем отключенный функционал `pushState` в песочнице.
+		sandbox.history.pushState = originalPushState;
 	});
 })(window.WebApp);
 // Проверяем есть ли объект `console` в хостовом объекте `window` если нет, то создаем его во 

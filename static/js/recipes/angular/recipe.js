@@ -12,28 +12,50 @@ window.WebApp || (window.WebApp = {});
 window.WebApp.Dependencies = function(window) {
 	var filesList = [];
 
-	/*if (!window.$) {
+	if (!window.$) {
 		filesList.push('system/jquery/jquery.min.js!order');
-	}*/
+	}
 
 	if (!window._) {
 		filesList.push('system/lodash.min.js!order');
 	}
-	filesList.push('recipe_libs/angular.js');
 	return filesList;
 };
 
 // Объявляем конструктор рецепта.
 window.WebApp.Recipe = function(webapp, window, sandbox, options) {
+	var initQueue = [];
+
 	// Подключаем необходимые транзиты.
-	//this.useTransits('jquery', 'location', options);
+	this.useTransits('jquery', 'location', options);
+
+	// Из-за того что ангулар инициализируется сразу как только загрузится необходимо перед его 
+	// загрузкой инициализировать транзиты иначе ангулар ней выйдет из песочницы.
+	options._loader('recipe_libs/angular.js', function() {
+		// Если существует очередь дожидающаяся загрузки анугуляра, то выполняем методы в порядке 
+		// добавления в очередь.
+		if (initQueue.length) {
+			for (var i = 0, length = initQueue.length; i < length; i++) {
+				initQueue[i]();
+			}
+		}
+	}, YES);
 
 	// Метод инициалзиации рантайма веб-приложения.
 	this.init = function(initData) {
-		// Проверяем если `this.afterInit` функция, то делаем его вызов с параметрами переданными 
-		// в метод `this.init()`
-		if (typeof(this.afterInit) === 'function') {
-			this.afterInit.apply(this, arguments);
+		// Проверяем существует ли метод `this.afterInit` иначе записываем в переменную пустую функцию.
+		var afterInit = typeof(this.afterInit) === 'function' ? this.afterInit : function() {};
+
+		// Из-за особенностей инициализации ангуляра проверяем доступен ли он.  
+		// Если да, то сразу вызываем метод `afterInit`, если же нет, то добавляем вызов в очередь.
+		if (window.angular) {
+			afterInit.apply(this, arguments);
+		} else {
+			initQueue.push((function(context, args) {
+				return function() {
+					afterInit.apply(context, args);
+				}
+			})(this, arguments));
 		}
 
 		// Если включен режим дебага, то возвращаем весь объект веб-приложения

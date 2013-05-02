@@ -265,11 +265,11 @@ window.WebApp.Loader.prototype = {
 				// приложения.  
 				// В качестве колбека пытаемся получить метод `afterDefered`, если он не будет объявлен, то 
 				// файлы будут загружены без уведомления о завершении загрузки.
-				if (filesList.defered) {
+				if (filesList && filesList.defered) {
 					if (typeof(this.sandboxWindow.App.afterDefered) === 'function') {
 						callback = this.sandboxWindow.App.afterDefered;
 					}
-					this.loader(filesList.defered, callback, true);
+					this.loader(filesList.defered, this.bind(callback, this.sandboxWindow.App), true);
 				}
 			}, this),
 			filesList = this.options.loadOptions.resources,

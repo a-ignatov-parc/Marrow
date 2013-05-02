@@ -1,7 +1,7 @@
 window.AppConstructor = function(options) {
 	_.extend(this, {
 		afterInit: function() {
-			// Инициализируем приложение
+			// Инициализируем неймспейс приложения.
 			window.todomvc = angular.module('todomvc', []);
 		},
 
@@ -10,7 +10,8 @@ window.AppConstructor = function(options) {
 		// файлов.  
 		// Если необходимо узнать о завершении загрузки этих файлов, то объявляем метод `afterDefered`.
 		afterDefered: function() {
-			console.info('App is ready!');
+			// После загрузки всех необходимых файлов самостоятельно инициализируем приложение.
+			angular.bootstrap(this.global.document.documentElement, ['todomvc']);
 		}
 	}, options);
 };
