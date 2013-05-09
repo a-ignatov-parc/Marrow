@@ -1,4 +1,3 @@
-// version: 1.0.121206
 Backbone.sync = (function() {
 	var methodMap = {
 			'create': 'POST',
