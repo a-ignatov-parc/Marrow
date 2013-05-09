@@ -1,27 +1,27 @@
 <!DOCTYPE html>  <html> <head>   <title>core.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="core.html">                 core.js               </a>                                           <a class="source" href="core.loader.html">                 core.loader.js               </a>                                           <a class="source" href="core.observatory.html">                 core.observatory.js               </a>                                           <a class="source" href="core.transit.jquery.html">                 core.transit.jquery.js               </a>                                           <a class="source" href="core.transit.location.html">                 core.transit.location.js               </a>                                           <a class="source" href="core.utils.html">                 core.utils.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               core.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*global</span>
 <span class="cm">  _</span>
-<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>version: 1.3.6</h2>
+<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>version: 0.3.6</h2>
 
 <p><strong>История версий:</strong>  </p>
 
 <ul>
-<li><p><code>1.3.6</code> - Все транзиты вынесены в отдельные модули и создана система подключения и запуска 
+<li><p><code>0.3.6</code> - Все транзиты вынесены в отдельные модули и создана система подключения и запуска 
 любого кол-ва подключаемых транзитов. Сделан багофикс класса <code>core.Perf</code>.</p></li>
-<li><p><code>1.3.5</code> - Исправлена работа транзита селекторов в последних версиях jquery.</p></li>
-<li><p><code>1.3.4</code> - В дефолтные параметры объекта <code>hosts</code> добавлена ссылка на папку <code>html</code>.</p></li>
-<li><p><code>1.3.3</code> - Добавлена возможность отключать использование транзита через опции приложения.</p></li>
-<li><p><code>1.3.2</code> - Исправлена ошибка когда при инициализации не синхронизировались роуты.</p></li>
-<li><p><code>1.3.1</code> - Добавлен метод для трансляции урлов с песочницы на главную страницу и обратно.</p></li>
-<li><p><code>1.3.0</code> - Из <code>core.js</code> вынесены все методы связанные с <code>backbone.js</code> в <code>core.sugar.js</code>, а так 
+<li><p><code>0.3.5</code> - Исправлена работа транзита селекторов в последних версиях jquery.</p></li>
+<li><p><code>0.3.4</code> - В дефолтные параметры объекта <code>hosts</code> добавлена ссылка на папку <code>html</code>.</p></li>
+<li><p><code>0.3.3</code> - Добавлена возможность отключать использование транзита через опции приложения.</p></li>
+<li><p><code>0.3.2</code> - Исправлена ошибка когда при инициализации не синхронизировались роуты.</p></li>
+<li><p><code>0.3.1</code> - Добавлен метод для трансляции урлов с песочницы на главную страницу и обратно.</p></li>
+<li><p><code>0.3.0</code> - Из <code>core.js</code> вынесены все методы связанные с <code>backbone.js</code> в <code>core.sugar.js</code>, а так 
 же сделан рефакторин остальных методов.</p></li>
-<li><p><code>1.2.5</code> - Расширен функционал форматирования даты в методе <code>dateUTC</code>.</p></li>
-<li><p><code>1.2.4</code> - Реализован метод создающий транзит селекторов из песочницы на главный объект 
+<li><p><code>0.2.5</code> - Расширен функционал форматирования даты в методе <code>dateUTC</code>.</p></li>
+<li><p><code>0.2.4</code> - Реализован метод создающий транзит селекторов из песочницы на главный объект 
 <code>window</code>.</p></li>
-<li><p><code>1.2.3</code> - Добавлены дефолтные переменные для приложения + максимально вынесены методы 
+<li><p><code>0.2.3</code> - Добавлены дефолтные переменные для приложения + максимально вынесены методы 
 завязанные на рецепт.</p></li>
-<li><p><code>1.2.2</code> - Исправлена ошибка в методе <code>dateUTC</code> если в него не передана дата.</p></li>
-<li><p><code>1.2.1</code> - Удален метод компиляции шаблонов так как они теперь будут заранее скомпилированы.</p></li>
-<li><p><code>1.2.0</code> - Класс ядра переделан для правильной работы в полноценной песочнице.</p></li>
+<li><p><code>0.2.2</code> - Исправлена ошибка в методе <code>dateUTC</code> если в него не передана дата.</p></li>
+<li><p><code>0.2.1</code> - Удален метод компиляции шаблонов так как они теперь будут заранее скомпилированы.</p></li>
+<li><p><code>0.2.0</code> - Класс ядра переделан для правильной работы в полноценной песочнице.</p></li>
 </ul>
 
 <p>Объявляем лексические сокращения для <code>true</code> и <code>false</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nb">window</span><span class="p">.</span><span class="nx">YES</span> <span class="o">=</span> <span class="o">!</span><span class="mi">0</span><span class="p">;</span>
