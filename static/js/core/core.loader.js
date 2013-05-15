@@ -1,7 +1,12 @@
-﻿// version: 0.3.0
+﻿// version: 0.3.1
 // -------------
 // 
 // __История версий:__  
+// 
+// * `0.3.1` - Добавлена обработка секции `defered` в списке файлов. Все файлы указанные в этой 
+// секции будут загружаться после полной инициализации приложения. Если необходимо выполнить 
+// какой-то код после загрузки файлов из секции defered`, то необходимо в приложении объявить 
+// метод `afterDefered`.
 // 
 // * `0.3.0` - Исправлена ошибка в загрузке секции `common`. Исправлено поведении загрузчика по 
 // умолчанию. Теперь при передаче `true` в качестве третьего аргумента загрузчик будет загружать 
@@ -255,8 +260,21 @@ window.WebApp.Loader.prototype = {
 		var Recipe = this.sandboxWindow.WebApp.Recipe,
 			Core = this.sandboxWindow.WebApp.Core,
 			complete = this.bind(function() {
+				var callback = null;
+
 				// Инициализируем веб-приложение так же создавая глобальную ссылку на него в объекте `window`
 				window[this.appName + (window[this.appName] ? this.sandboxWindow.App.generateId() : '')] = this.sandboxWindow.App.init(this.options.bootstrapData);
+
+				// Если в списке ресурсов обнаружена секция `defered`, то ее мы загружаем после инициализации 
+				// приложения.  
+				// В качестве колбека пытаемся получить метод `afterDefered`, если он не будет объявлен, то 
+				// файлы будут загружены без уведомления о завершении загрузки.
+				if (filesList && filesList.defered) {
+					if (typeof(this.sandboxWindow.App.afterDefered) === 'function') {
+						callback = this.sandboxWindow.App.afterDefered;
+					}
+					this.loader(filesList.defered, this.bind(callback, this.sandboxWindow.App), true);
+				}
 			}, this),
 			filesList = this.options.loadOptions.resources,
 			resources = [];
