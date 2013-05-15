@@ -102,7 +102,7 @@ window.AppConstructor = function(options) {
 
 				// Запускаем тестирование
 				run();
-			}, this), YES);
+			}, this));
 		}
 	}, options);
 };

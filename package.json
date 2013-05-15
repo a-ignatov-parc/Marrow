@@ -6,7 +6,7 @@
 	"cssPath": "static/styles/css",
 	"sassPath": "static/styles/scss",
 	"description": "Sandbox webapp loading framework with conditional recipes",
-	"url": "https://github.com/Parcsis/Marrow",
+	"url": "https://github.com/a-ignatov-parc/Marrow",
 	"keywords": [
 		"util",
 		"functional",
@@ -16,7 +16,7 @@
 		"browser",
 		"sandbox"
 	],
-	"author": "Anton Ignatov <a.ignatov@parcsis.org>",
+	"author": "Anton Ignatov <abietis@gmail.com>",
 	"dependencies": {
 		"lodash": ">=1.0"
 	},
@@ -34,5 +34,5 @@
 		"grunt-contrib-handlebars": ">=0.5.4"
 	},
 	"main": "marrow.js",
-	"version": "1.3.6-176"
+	"version": "0.3.6-178"
 }
