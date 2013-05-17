@@ -73,6 +73,7 @@ var gruntConfig = {
 			options: {
 				banner: '/**\n' +
 						' * <%= pkg.name %> - v<%= pkg.version %> (build date: <%= grunt.template.today("dd/mm/yyyy") %>)\n' +
+						' * <%= pkg.url %>\n' +
 						' * <%= pkg.description %>\n' +
 						' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
 						' */\n'
