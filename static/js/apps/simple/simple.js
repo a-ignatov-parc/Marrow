@@ -1,7 +1,7 @@
 window.AppConstructor = function(options) {
 	_.extend(this, {
 		afterInit: function() {
-			alert('App is ready!');
+			$('body').prepend('<span>App is ready!</span>');
 		}
 	}, options);
 };
