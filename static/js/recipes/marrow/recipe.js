@@ -1,10 +1,12 @@
 /*global
 	Handlebars
 */
-// version: 1.2.8
+// version: 1.2.9
 // -------------
 // 
 // __История версий:__  
+// 
+// * `1.2.9` - Внесение правок для работы с новым api marrow.
 // 
 // * `1.2.8` - Теперь в транзиты обязательно нужно передавать объект опций.
 // 
@@ -89,7 +91,7 @@ window.WebApp.Recipe = function(webapp, window, sandbox, options) {
 	this.container = $(options.loadOptions.containerSelector || 'body');
 
 	// Метод инициалзиации рантайма веб-приложения.
-	this.init = function(initData) {
+	this.init = function(initData, registerAfterInitHandler) {
 		var path = '/',
 			helper;
 
@@ -181,17 +183,14 @@ window.WebApp.Recipe = function(webapp, window, sandbox, options) {
 		// Передаем в бекбон инстанс jquery, который располагается в песочнице
 		this.Backbone.setDomLibrary(this.sandbox.$);
 
-		// Проверяем если `this.afterInit` функция, то делаем его вызов с параметрами переданными 
-		// в метод `this.init()`
-		if (typeof(this.afterInit) === 'function') {
-			this.afterInit.apply(this, arguments);
-		}
-
 		// Инициализируем ядро backbone.js
 		this.Backbone.history.start({
 			root: path,
 			core: this
 		});
+
+		// Регистрируем обработчик, который будет вызван по завершению инициализации приложения.
+		registerAfterInitHandler(this.afterInit);
 
 		// Если включен режим дебага, то возвращаем весь объект веб-приложения
 		if (this.debugMode && !this.strictMode) {

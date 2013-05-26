@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Marrow Core Grunt Test Suite</title>
+	<link rel="stylesheet" href="static/qunit.css">
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="static/qunit.js"></script>
+	<script src="../libs/jquery/jquery.min.js"></script>
+	<script src="core.transit.jquery.js"></script>
+	<script type="text/javascript" src="../loader.js"></script>
+	<script type="text/javascript">
+		var path = window.location.href,
+			delimeterPos = path.indexOf('marrow'),
+			rootPath = path.substr(0, delimeterPos);
+
+		new WebApp.Loader(null, {
+			loadOptions: {
+				locations: {
+					'static': rootPath + 'marrow/'
+				},
+				AppConstructor: function() {
+					this.afterInit = function() {
+						this.global.runTests(this);
+					}
+				}
+			}
+		});
+	</script>
+
+	<!--script src="../core/core.js"></script>
+	<script src="../core/core.observatory.js"></script>
+	<script src="../core/transits/core.transit.jquery.js"></script>
+	<script src="core.transit.jquery.js"></script-->
+</body>
+</html>

@@ -1,7 +1,16 @@
-﻿// version: 0.3.1
+﻿// version: 0.3.3
 // -------------
 // 
 // __История версий:__  
+// 
+// * `0.3.3` - Добавлена возможность запускать приложение без создания файла приложения передавая в 
+// загрузчик качестве имени `null` или `undefined`. Тем самым упрощая минимальную структуру 
+// приложения необходимую для запуска. Что в свою очеред облегчит написание тестов на функционал 
+// работающего приложения.
+// 
+// * `0.3.2` - При запуске рантайма приложения в метод `init` вторым аргументом теперь передается 
+// функция с помощью которой можно зарегистрировать обработчик, который будет вызван после 
+// завершения инициализации приложения.
 // 
 // * `0.3.1` - Добавлена обработка секции `defered` в списке файлов. Все файлы указанные в этой 
 // секции будут загружаться после полной инициализации приложения. Если необходимо выполнить 
@@ -103,8 +112,13 @@ window.WebApp.Loader = function(namespace, options) {
 		this.rootHost += '/';
 	}
 
+	// Записываем в переменную имя приложения
 	this.appName = this.options.namespace;
-	this.appPath = ['apps', this.appName.toLowerCase()].join('/');
+
+	// Проверяем существует ли имя приложения и если да то формируем переменную с путем до приложения.
+	if (this.appName != null) {
+		this.appPath = ['apps', this.appName.toLowerCase()].join('/');
+	}
 
 	// Инициализируем рантайм загрузки и запуска веб-приложения
 	this.init();
@@ -116,7 +130,16 @@ window.WebApp.Loader.prototype = {
 	init: function() {
 		this.createDefaults();
 		this.createSandbox(function(sandboxWindow) {
+			// Если небыло передано имя приложения и в параметрах загрузчика передана параметр 
+			// `AppConstructor` в виде функции, то указываем эту функцию как конструктор приложения.
+			if (this.appName == null && typeof(this.options.loadOptions.AppConstructor) === 'function') {
+				sandboxWindow.AppConstructor = this.options.loadOptions.AppConstructor;
+			}
+
+			// Содаем загрузчики для основной страницы и песочницы.
 			this.createLoader(window, sandboxWindow);
+
+			// Загружаем первоначальные файлы ядра и приложения.
 			this.loadAppCore(sandboxWindow);
 		});
 	},
@@ -196,18 +219,29 @@ window.WebApp.Loader.prototype = {
 	},
 
 	loadAppCore: function(sandboxWindow) {
-		var appName = this.appName.toLowerCase(),
-			filesList = this.options.loadOptions.resources || {},
-			resources = [];
+		var filesList = this.options.loadOptions.resources || {},
+			resources = [],
+			appName;
 
 		if (this.options.debugMode) {
-			resources.push(appName + '.js', 'root/marrow.js!order');
+			resources.push('root/marrow.js!order');
 		} else {
-			resources.push('build/' + appName + '.min.js', 'root/marrow.min.js!order');
+			resources.push('root/marrow.min.js!order');
 		}
 
 		// Добавляем на загрузку рецепт приложения.
 		resources.push('recipe/recipe.js!order');
+
+		// Если имя приложения было передано, то загружаем файл приложения.
+		if (this.appName != null) {
+			appName = this.appName.toLowerCase();
+
+			if (this.options.debugMode) {
+				resources.push(appName + '.js');
+			} else {
+				resources.push('build/' + appName + '.min.js');
+			}
+		}
 
 		if (filesList.styles) {
 			// Загружаем в основную страницу необходимые стили
@@ -260,10 +294,25 @@ window.WebApp.Loader.prototype = {
 		var Recipe = this.sandboxWindow.WebApp.Recipe,
 			Core = this.sandboxWindow.WebApp.Core,
 			complete = this.bind(function() {
-				var callback = null;
+				var appApi,
+					callback,
+					afterInitHandler;
 
 				// Инициализируем веб-приложение так же создавая глобальную ссылку на него в объекте `window`
-				window[this.appName + (window[this.appName] ? this.sandboxWindow.App.generateId() : '')] = this.sandboxWindow.App.init(this.options.bootstrapData);
+				appApi = this.sandboxWindow.App.init(this.options.bootstrapData, function(handler) {
+					afterInitHandler = handler;
+				});
+
+				// Если имя приложения было передано, то создаем ссылку с таким именем в объекте `window` 
+				// основной страницы куда мы сохраняем полученный api текущего приложения.
+				if (this.appName != null) {
+					window[this.appName + (window[this.appName] ? this.sandboxWindow.App.generateId() : '')] = appApi;
+				}
+
+				// Проверяем если рецепт во время инициализации зарегистрировал обработчик, то вызываем его.
+				if (typeof(afterInitHandler) === 'function') {
+					afterInitHandler.call(this.sandboxWindow.App, this.options.bootstrapData);
+				}
 
 				// Если в списке ресурсов обнаружена секция `defered`, то ее мы загружаем после инициализации 
 				// приложения.  
@@ -347,7 +396,7 @@ window.WebApp.Loader.prototype = {
 
 	createLoader: function(window, sandbox) {
 		var self = this,
-			appName = this.appName.toLowerCase(),
+			appName = this.appName != null ? this.appName.toLowerCase() : '',
 			globalScope = this.createLoaderInstance(window),
 			sandboxScope = this.createLoaderInstance(sandbox);
 

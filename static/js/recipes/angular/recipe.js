@@ -1,9 +1,11 @@
-// version: 1.0.0
+// version: 0.1.1
 // -------------
 //
 // __История версий:__
+// 
+// * `0.1.1` - Внесение правок для работы с новым api marrow.
 //
-// * `1.0.0` - Создан минимальный необходимый функционал рецепта.
+// * `0.1.0` - Создан минимальный необходимый функционал рецепта.
 //
 // Проверяем существует ли неймспейс приложения. Если нет, то создаем его.
 window.WebApp || (window.WebApp = {});
@@ -42,21 +44,24 @@ window.WebApp.Recipe = function(webapp, window, sandbox, options) {
 	}, YES);
 
 	// Метод инициалзиации рантайма веб-приложения.
-	this.init = function(initData) {
-		// Проверяем существует ли метод `this.afterInit` иначе записываем в переменную пустую функцию.
-		var afterInit = typeof(this.afterInit) === 'function' ? this.afterInit : function() {};
+	this.init = function(initData, registerAfterInitHandler) {
+		// Регистрируем обработчик, который будет вызван по завершению инициализации приложения.
+		registerAfterInitHandler(function() {
+			// Проверяем существует ли метод `this.afterInit` иначе записываем в переменную пустую функцию.
+			var afterInit = typeof(this.afterInit) === 'function' ? this.afterInit : function() {};
 
-		// Из-за особенностей инициализации ангуляра проверяем доступен ли он.  
-		// Если да, то сразу вызываем метод `afterInit`, если же нет, то добавляем вызов в очередь.
-		if (window.angular) {
-			afterInit.apply(this, arguments);
-		} else {
-			initQueue.push((function(context, args) {
-				return function() {
-					afterInit.apply(context, args);
-				}
-			})(this, arguments));
-		}
+			// Из-за особенностей инициализации ангуляра проверяем доступен ли он.  
+			// Если да, то сразу вызываем метод `afterInit`, если же нет, то добавляем вызов в очередь.
+			if (window.angular) {
+				afterInit.apply(this, arguments);
+			} else {
+				initQueue.push((function(context, args) {
+					return function() {
+						afterInit.apply(context, args);
+					}
+				})(this, arguments));
+			}
+		});
 
 		// Если включен режим дебага, то возвращаем весь объект веб-приложения
 		if (this.debugMode && !this.strictMode) {
