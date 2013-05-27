@@ -223,6 +223,7 @@ appsNameList.forEach(function(appName) {
 		appFileList = [path + 'routes/workspace.js', path + 'views/workspace.js'],
 		helpersFileList = [],
 		sandboxFileList = [],
+		deferredFileList = [],
 		handler = function(target, path, name) {
 			if (name.indexOf('._') !== 0) {
 				target.push(path + name);
@@ -388,6 +389,32 @@ appsNameList.forEach(function(appName) {
 				dest: path + 'build/libs.min.js'
 			};
 			minTasks.push('uglify:' + appName + '_libs');
+		}
+
+		if (config.deferred) {
+			config.deferred.forEach(function (item) {
+				if (item.load) {
+					item.load.forEach(function(file) {
+						handler(deferredFileList, path, file);
+					});
+				} else {
+					handler(deferredFileList, path, item);
+				}
+			});
+
+			// Добавляем задачу на конкатенацию библиотек отложенной загрузки
+			gruntConfig.concat[appName + '_deferred'] = {
+				src: deferredFileList,
+				dest: path + 'build/deferred_libs.js'
+			};
+			concatTasks.push('concat:' + appName + '_deferred');
+
+			// Добавляем задачу на минификацию библиотек отложенной загрузки
+			gruntConfig.uglify[appName + '_deferred'] = {
+				src: path + 'build/deferred_libs.js',
+				dest: path + 'build/deferred_libs.min.js'
+			};
+			minTasks.push('uglify:' + appName + '_deferred');
 		}
 	}
 

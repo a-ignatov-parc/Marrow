@@ -40,5 +40,9 @@ WebApp.TestApp.resources = {
 		"routes/workspace.js",
 		"views/workspace.js",
 		"views/gallery.js"
+	],
+
+	"deferred": [
+		"libs/bootstrap-tooltip.js"
 	]
 }
