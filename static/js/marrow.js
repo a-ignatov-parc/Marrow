@@ -85,7 +85,7 @@ window.WebApp.Core = function(webapp, window, sandbox) {
 		};
 
 	// Версия фреймворка `Marrow`.
-	this.version = '0.3.6-181';
+	this.version = '0.3.6-187';
 
 	// Ссылка для получения из песочницы объекта `window` основного документа в котором 
 	// инициализируется веб-приложение.

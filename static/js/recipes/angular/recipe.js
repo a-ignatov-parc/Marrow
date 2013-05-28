@@ -39,7 +39,7 @@ window.WebApp.Recipe = function(webapp, window, sandbox, options) {
 				initQueue[i]();
 			}
 		}
-	}, YES);
+	});
 
 	// Метод инициалзиации рантайма веб-приложения.
 	this.init = function(initData) {
