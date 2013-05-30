@@ -1,10 +1,10 @@
-/* line 2, ../../scss/todomarionette/app.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/todomarionette\/app\.scss}line{font-family:\000032}}
 #todoapp.filter-active #todo-list .completed,
 #todoapp.filter-completed #todo-list .active {
   display: none;
 }
 
-/* line 7, ../../scss/todomarionette/app.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/todomarionette\/app\.scss}line{font-family:\000037}}
 #main,
 #footer {
   display: none;

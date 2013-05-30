@@ -90,7 +90,8 @@ var gruntConfig = {
 					imagesDir: pkg.imgPath,
 					fontsDir: pkg.fontsPath,
 					outputStyle: 'expanded',
-					relativeAssets: true
+					relativeAssets: true,
+					debugInfo: true
 				}
 			},
 			dev: {
@@ -101,6 +102,7 @@ var gruntConfig = {
 					fontsDir: pkg.fontsPath,
 					outputStyle: 'expanded',
 					relativeAssets: true,
+					debugInfo: true,
 					force: true
 				}
 			},
