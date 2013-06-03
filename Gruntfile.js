@@ -23,7 +23,13 @@ var fs = require('fs'),
 		console.log(pathname, wordList);
 		return wordList.join('');
 	},
-	coreFiles = [corePath + 'core.js'];
+	coreFiles = [corePath + 'core.js'],
+	bannerTemplate = '/**\n' +
+		' * <%= pkg.name %> - v<%= pkg.version %> (build date: <%= grunt.template.today("dd/mm/yyyy") %>)\n' +
+		' * <%= pkg.url %>\n' +
+		' * <%= pkg.description %>\n' +
+		' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
+		' */\n';
 
 var gruntConfig = {
 		pkg: pkg,
@@ -68,15 +74,10 @@ var gruntConfig = {
 		uglify: {
 			loader: {
 				src: rootPath + 'loader.js',
-				dest: rootPath + 'loader.min.js'
-			},
-			options: {
-				banner: '/**\n' +
-						' * <%= pkg.name %> - v<%= pkg.version %> (build date: <%= grunt.template.today("dd/mm/yyyy") %>)\n' +
-						' * <%= pkg.url %>\n' +
-						' * <%= pkg.description %>\n' +
-						' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
-						' */\n'
+				dest: rootPath + 'loader.min.js',
+				options: {
+					banner: bannerTemplate
+				}
 			}
 		},
 		qunit: {
@@ -212,7 +213,10 @@ concatTasks.push('concat:core');
 // Добавляем задачу на минификацию ядра
 gruntConfig.uglify.core = {
 	src: ['<banner>', rootPath + 'marrow.js'],
-	dest: rootPath + 'marrow.min.js'
+	dest: rootPath + 'marrow.min.js',
+	options: {
+		banner: bannerTemplate
+	}
 };
 minTasks.push('uglify:core');
 

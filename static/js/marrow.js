@@ -1,10 +1,12 @@
 /*global
 	_
 */
-// version: 0.3.6
+// version: 0.3.7
 // -------------
 // 
 // __История версий:__  
+// 
+// * `0.3.7` - Мелкий багфикс для `core.Perf`.
 // 
 // * `0.3.6` - Все транзиты вынесены в отдельные модули и создана система подключения и запуска 
 // любого кол-ва подключаемых транзитов. Сделан багофикс класса `core.Perf`.
@@ -85,7 +87,7 @@ window.WebApp.Core = function(webapp, window, sandbox) {
 		};
 
 	// Версия фреймворка `Marrow`.
-	this.version = '0.3.6-188';
+	this.version = '0.3.6-192';
 
 	// Ссылка для получения из песочницы объекта `window` основного документа в котором 
 	// инициализируется веб-приложение.
@@ -142,10 +144,12 @@ window.WebApp.Core = function(webapp, window, sandbox) {
 				}
 			};
 
-		for (var i = 0, length = methods.length; i < length; i++) {
-			if (methods[i] && methods[i] in window.performance) {
-				method = methods[i];
-				break;
+		if (window.performance != null) {
+			for (var i = 0, length = methods.length; i < length; i++) {
+				if (methods[i] && methods[i] in window.performance) {
+					method = methods[i];
+					break;
+				}
 			}
 		}
 
