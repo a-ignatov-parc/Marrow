@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>WebApp</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+		<!-- Init Section -->
+			<script type="text/javascript" src="../../static/js/loader.min.js"></script>
+			<script type="text/javascript">
+				// Запуск первого приложения
+				new WebApp.Loader('MultipleApp', {
+					loadOptions: {
+						containerSelector: '#column1',
+						resources: {
+							'styles': 'styles/demo.css'
+						},
+						locations: {
+							'static': 'http://localhost/marrow/'
+						}
+					},
+					bootstrapData: {
+						Color: '#256799',
+						Text: 'App1'
+					}
+				});
+
+				// Запуск второго приложения
+				new WebApp.Loader('MultipleApp', {
+					loadOptions: {
+						containerSelector: '#column2',
+						locations: {
+							'static': 'http://localhost/marrow/'
+						}
+					},
+					bootstrapData: {
+						Color: '#faca00',
+						Text: 'App2'
+					}
+				});
+
+				// Запуск третьего приложения
+				new WebApp.Loader('MultipleApp', {
+					loadOptions: {
+						containerSelector: '#column3',
+						locations: {
+							'static': 'http://localhost/marrow/'
+						}
+					},
+					bootstrapData: {
+						Color: '#f42200',
+						Text: 'App3'
+					}
+				});
+			</script>
+		<!-- Init Section -->
+	</head>
+	<body>
+		<div class="l-wrapper">
+			<ul class="b-columns">
+				<li id="column1" class="b-column"></li>
+				<li id="column2" class="b-column"></li>
+				<li id="column3" class="b-column b-column--last"></li>
+			</ul>
+		</div>
+	</body>
+</html>

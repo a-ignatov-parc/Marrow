@@ -1,0 +1,28 @@
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/doubleapp\/main\.scss}line{font-family:\000031}}
+.l-wrapper {
+  width: auto;
+  margin: 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/doubleapp\/main\.scss}line{font-family:\000037}}
+.b-columns--2col .b-column {
+  width: 50%;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/doubleapp\/main\.scss}line{font-family:\0000312}}
+.b-column {
+  float: left;
+  width: 100%;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/doubleapp\/main\.scss}line{font-family:\0000317}}
+.b-column--last {
+  float: none;
+  width: auto;
+  overflow: hidden;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/doubleapp\/main\.scss}line{font-family:\0000323}}
+.b-column-indent {
+  margin: 0 50px;
+}

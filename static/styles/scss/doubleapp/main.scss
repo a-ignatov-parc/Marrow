@@ -1,0 +1,25 @@
+.l-wrapper {
+	width: auto;
+	margin: 0;
+}
+
+.b-columns--2col {
+	.b-column {
+		width: 50%;
+	}
+}
+
+.b-column {
+	float: left;
+	width: 100%;
+}
+
+.b-column--last {
+	float: none;
+	width: auto;
+	overflow: hidden;
+}
+
+.b-column-indent {
+	margin: 0 50px;
+}
