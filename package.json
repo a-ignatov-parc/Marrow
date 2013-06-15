@@ -1,25 +1,28 @@
 {
 	"name": "Marrow",
-	"imgPath": "static/img",
-	"rootPath": "static/js",
-	"fontsPath": "static/fonts",
-	"cssPath": "static/styles/css",
-	"sassPath": "static/styles/scss",
 	"description": "Sandbox webapp loading framework with conditional recipes",
+	"version": "0.3.6-194",
+	"author": "Anton Ignatov",
 	"url": "https://github.com/a-ignatov-parc/Marrow",
+	"main": "./static/js/marrow.js",
 	"keywords": [
 		"util",
-		"functional",
-		"backbone",
-		"sugar",
 		"client",
 		"browser",
-		"sandbox"
+		"sandbox",
+		"loader"
 	],
-	"author": "Anton Ignatov <abietis@gmail.com>",
-	"dependencies": {
-		"lodash": ">=1.0"
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "https://github.com/a-ignatov-parc/Marrow/blob/master/LICENSE"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/a-ignatov-parc/Marrow.git"
 	},
+	"dependencies": {},
 	"devDependencies": {
 		"grunt": ">=0.4",
 		"grunt-docco": ">=0.2",
@@ -33,6 +36,9 @@
 		"grunt-contrib-compass": ">=0.1",
 		"grunt-contrib-handlebars": ">=0.5.4"
 	},
-	"main": "marrow.js",
-	"version": "0.3.6-193"
+	"imgPath": "static/img",
+	"rootPath": "static/js",
+	"fontsPath": "static/fonts",
+	"cssPath": "static/styles/css",
+	"sassPath": "static/styles/scss"
 }

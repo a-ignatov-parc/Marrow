@@ -29,6 +29,7 @@ var fs = require('fs'),
 		' * <%= pkg.url %>\n' +
 		' * <%= pkg.description %>\n' +
 		' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
+		' * Licensed MIT\n' +
 		' */\n';
 
 var gruntConfig = {
