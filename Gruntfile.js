@@ -165,8 +165,8 @@ var gruntConfig = {
 	},
 	defaultTasks = ['watch'],
 	releaseTasks = ['jshint:beforeconcat'],
-	concatTasks = ['concat:loader'],
-	minTasks = ['compass:dev', 'compass:prod', 'uglify:loader'],
+	minTasks = ['compass:dev', 'compass:prod'],
+	concatTasks = [],
 	marrowExcludeList = {
 		'core.js': true,
 		'core.loader.js': true
@@ -208,7 +208,6 @@ gruntConfig.concat.core = {
 	src: ['<banner>'].concat(coreFiles),
 	dest: rootPath + 'marrow.js'
 };
-concatTasks.push('concat:core');
 
 // Добавляем задачу на минификацию ядра
 gruntConfig.uglify.core = {
@@ -218,7 +217,6 @@ gruntConfig.uglify.core = {
 		banner: bannerTemplate
 	}
 };
-minTasks.push('uglify:core');
 
 // Добавляем задачу на линтование ядра
 gruntConfig.jshint.beforeconcat = gruntConfig.jshint.beforeconcat.concat(coreFiles);
@@ -452,12 +450,13 @@ module.exports = function(grunt) {
 	grunt.registerTask('tests', 'qunit');
 	grunt.registerTask('default', defaultTasks);
 	grunt.registerTask('templates', 'handlebars:compile');
+	grunt.registerTask('apps', concatTasks.concat(minTasks));
 	grunt.registerTask('loader', ['bumpup:build', 'concat:loader', 'uglify:loader']);
 	grunt.registerTask('core', ['bumpup:build', 'updatepkg', 'concat:core', 'version', 'uglify:core']);
 
 	// Компилируем проект без каких либо проверок на привильность кода
-	grunt.registerTask('compile', ['bumpup:build', 'updatepkg', 'debuginfo'].concat('handlebars:compile', concatTasks, 'version', minTasks));
+	grunt.registerTask('compile', ['bumpup:build', 'updatepkg', 'debuginfo'].concat('handlebars:compile', 'concat:loader', 'concat:core', concatTasks, 'version', 'uglify:loader', 'uglify:core', minTasks));
 
 	// Полностью готовим проект к релизу со всеми проверками и генерацией документации
-	grunt.registerTask('release', releaseTasks.concat('bumpup:build', 'updatepkg', 'debuginfo', 'handlebars:compile', concatTasks, 'version', 'jshint:afterconcat', 'qunit', minTasks, 'docco'));
+	grunt.registerTask('release', releaseTasks.concat('bumpup:build', 'updatepkg', 'debuginfo', 'handlebars:compile', 'concat:loader', 'concat:core', concatTasks, 'version', 'jshint:afterconcat', 'qunit', 'uglify:loader', 'uglify:core', minTasks, 'docco'));
 };

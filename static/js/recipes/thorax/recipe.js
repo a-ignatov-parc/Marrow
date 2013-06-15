@@ -25,6 +25,9 @@ window.WebApp.Recipe = function(webapp, window, sandbox, options) {
 	// Подключаем необходимые транзиты.
 	this.useTransits('jquery', 'location', options);
 
+	// Подготавливаем _DOM_ элемент который будет выступать в качестве контейнера для веб-приложения.
+	this.container = $(options.loadOptions.containerSelector || 'body');
+
 	// Метод инициалзиации рантайма веб-приложения.
 	this.init = function(initData) {
 		// Проверяем если `this.afterInit` функция, то делаем его вызов с параметрами переданными
