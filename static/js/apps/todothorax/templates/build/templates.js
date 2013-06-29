@@ -6,8 +6,8 @@ this["App"] = this["App"] || {};
 this["App"]["Templates"] = this["App"]["Templates"] || {};
 
 this["App"]["Templates"]["app"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, stack2, options, self=this, functionType="function", escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
@@ -19,14 +19,14 @@ function program1(depth0,data) {
     'tag': ("ul"),
     'id': ("todo-list")
   },inverse:self.noop,fn:self.program(2, program2, data),data:data};
-  stack2 = ((stack1 = helpers.collection),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "collection", options));
+  stack2 = ((stack1 = helpers.collection || depth0.collection),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "collection", options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n	</section>\n	";
   options = {hash:{
     'tag': ("footer"),
     'id': ("footer")
   },data:data};
-  buffer += escapeExpression(((stack1 = helpers.view),stack1 ? stack1.call(depth0, "stats", options) : helperMissing.call(depth0, "view", "stats", options)))
+  buffer += escapeExpression(((stack1 = helpers.view || depth0.view),stack1 ? stack1.call(depth0, "stats", options) : helperMissing.call(depth0, "view", "stats", options)))
     + "\n	";
   return buffer;
   }
@@ -55,15 +55,15 @@ function program3(depth0,data) {
 
   buffer += "<section id=\"todoapp\">\n	<header id=\"header\">\n		<h1>todos</h1>\n		<input id=\"new-todo\" placeholder=\"What needs to be done?\" autofocus>\n	</header>\n	";
   options = {hash:{},inverse:self.program(1, program1, data),fn:self.noop,data:data};
-  stack2 = ((stack1 = helpers.empty),stack1 ? stack1.call(depth0, depth0.collection, options) : helperMissing.call(depth0, "empty", depth0.collection, options));
+  stack2 = ((stack1 = helpers.empty || depth0.empty),stack1 ? stack1.call(depth0, depth0.collection, options) : helperMissing.call(depth0, "empty", depth0.collection, options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n</section>\n<div id=\"info\">\n	<p>Double-click to edit a todo</p>\n	<p>Written by <a href=\"https://github.com/addyosmani\">Addy Osmani</a> &amp; <a href=\"https://github.com/eastridge\">Ryan Eastridge</a></p>\n	<p>Part of <a href=\"http://todomvc.com\">TodoMVC</a></p>\n</div>";
   return buffer;
   });
 
 this["App"]["Templates"]["stats"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
-helpers = helpers || Handlebars.helpers; data = data || {};
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, stack2, options, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
@@ -107,15 +107,15 @@ function program7(depth0,data) {
   options = {hash:{
     'class': ("selected")
   },inverse:self.noop,fn:self.program(1, program1, data),data:data};
-  stack2 = ((stack1 = helpers.link),stack1 ? stack1.call(depth0, "/", options) : helperMissing.call(depth0, "link", "/", options));
+  stack2 = ((stack1 = helpers.link || depth0.link),stack1 ? stack1.call(depth0, "/", options) : helperMissing.call(depth0, "link", "/", options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n	</li>\n	<li>\n		";
   options = {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data};
-  stack2 = ((stack1 = helpers.link),stack1 ? stack1.call(depth0, "/active", options) : helperMissing.call(depth0, "link", "/active", options));
+  stack2 = ((stack1 = helpers.link || depth0.link),stack1 ? stack1.call(depth0, "/active", options) : helperMissing.call(depth0, "link", "/active", options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n	</li>\n	<li>\n		";
   options = {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data};
-  stack2 = ((stack1 = helpers.link),stack1 ? stack1.call(depth0, "/completed", options) : helperMissing.call(depth0, "link", "/completed", options));
+  stack2 = ((stack1 = helpers.link || depth0.link),stack1 ? stack1.call(depth0, "/completed", options) : helperMissing.call(depth0, "link", "/completed", options));
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n	</li>\n</ul>\n";
   stack2 = helpers['if'].call(depth0, depth0.completed, {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});

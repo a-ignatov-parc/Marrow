@@ -12,7 +12,18 @@ window.WebApp || (window.WebApp = {});
 window.WebApp.Dependencies = function(window) {
 	var filesList = [];
 
-	filesList.push('recipe_libs/thorax.js!order');
+	if (!window.$) {
+		filesList.push('recipe_libs/jquery.js');
+	}
+
+	if (!window.Handlebars) {
+		filesList.push('system/handlebars.min.js');
+	}
+
+	if (!window._) {
+		filesList.push('recipe_libs/underscore.js');
+	}
+	filesList.push('recipe_libs/backbone.js', 'recipe_libs/thorax.js');
 
 	//initialize the app object
 	window.app = {};
