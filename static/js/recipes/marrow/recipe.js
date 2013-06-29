@@ -34,16 +34,16 @@ window.WebApp.Dependencies = function(window) {
 	var filesList = [];
 
 	if (!window.$) {
-		filesList.push('system/jquery/jquery.min.js!order');
+		filesList.push('system/jquery/jquery.min.js');
 	}
 
 	if (!window._) {
-		filesList.push('system/lodash.min.js!order');
+		filesList.push('system/lodash.min.js');
 	}
-	filesList.push('recipe_libs/backbone.min.js!order', 'recipe_libs/backbone.sync.js!order', 'recipe/recipe.sugar.js');
+	filesList.push('recipe_libs/backbone.min.js', 'recipe_libs/backbone.sync.js', 'recipe/recipe.sugar.js');
 
 	if (!window.Handlebars) {
-		filesList.push('recipe_libs/handlebars.js');
+		filesList.push('system/handlebars.min.js');
 	}
 	return filesList;
 };
