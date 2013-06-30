@@ -1,7 +1,7 @@
 {
 	"name": "Marrow",
 	"description": "Sandbox webapp loading framework with conditional recipes",
-	"version": "0.3.4-6",
+	"version": "0.3.4-8",
 	"author": "Anton Ignatov",
 	"url": "https://github.com/a-ignatov-parc/Marrow",
 	"main": "./static/js/marrow.js",

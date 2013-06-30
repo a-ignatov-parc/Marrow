@@ -1,7 +1,10 @@
-// version: 0.3.4
+// version: 0.3.5
 // -------------
 // 
 // __История версий:__  
+// 
+// * `0.3.5` - В сообщении об использовании параметра `useLocationFix` добавлено навзвание 
+// приложения для кого оно используется.
 // 
 // * `0.3.4` - Добавлена возможность запускать приложение без создания файла приложения передавая в 
 // загрузчик качестве имени `null` или `undefined`. Тем самым упрощая минимальную структуру 
@@ -180,7 +183,7 @@ window.WebApp.Loader.prototype = {
 		// лудший вариант.
 		if (this.options.loadOptions.useLocationFix) {
 			this.iframe.src = this.options.hosts.html + 'sandbox.html';
-			console.warn('Using location fix hack! No crossdomain initialization available');
+			console.warn('Using location fix hack for ' + this.appName + '! No crossdomain initialization available');
 		} else {
 			this.iframe.src = 'javascript:0';
 		}
