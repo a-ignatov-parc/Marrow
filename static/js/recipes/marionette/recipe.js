@@ -1,7 +1,9 @@
-// version: 0.1.1
+// version: 0.1.2
 // -------------
 // 
 // __История версий:__  
+// 
+// * `0.1.2` - Внесение правок для работы с новым api marrow.
 // 
 // * `0.1.1` - Теперь в транзиты обязательно нужно передавать объект опций.
 // 
@@ -33,12 +35,9 @@ window.WebApp.Recipe = function(webapp, window, sandbox, options) {
 	this.useTransits('jquery', 'location', options);
 
 	// Метод инициалзиации рантайма веб-приложения.
-	this.init = function(initData) {
-		// Проверяем если `this.afterInit` функция, то делаем его вызов с параметрами переданными 
-		// в метод `this.init()`
-		if (typeof(this.afterInit) === 'function') {
-			this.afterInit.apply(this, arguments);
-		}
+	this.init = function(initData, registerAfterInitHandler) {
+		// Регистрируем обработчик, который будет вызван по завершению инициализации приложения.
+		registerAfterInitHandler(this.afterInit);
 
 		// Если включен режим дебага, то возвращаем весь объект веб-приложения
 		if (this.debugMode && !this.strictMode) {

@@ -1,7 +1,11 @@
-// version: 0.1.0
+// version: 0.1.2
 // -------------
 //
 // __История версий:__
+// 
+// * `0.1.2` - Обновлена версия библиотек и сделан новый список зависимостей.
+// 
+// * `0.1.1` - Внесение правок для работы с новым api marrow.
 //
 // * `0.1.0` - Создан минимальный необходимый функционал рецепта.
 //
@@ -40,12 +44,9 @@ window.WebApp.Recipe = function(webapp, window, sandbox, options) {
 	this.container = $(options.loadOptions.containerSelector || 'body');
 
 	// Метод инициалзиации рантайма веб-приложения.
-	this.init = function(initData) {
-		// Проверяем если `this.afterInit` функция, то делаем его вызов с параметрами переданными
-		// в метод `this.init()`
-		if (typeof(this.afterInit) === 'function') {
-			this.afterInit.apply(this, arguments);
-		}
+	this.init = function(initData, registerAfterInitHandler) {
+		// Регистрируем обработчик, который будет вызван по завершению инициализации приложения.
+		registerAfterInitHandler(this.afterInit);
 
 		// Если включен режим дебага, то возвращаем весь объект веб-приложения
 		if (this.debugMode && !this.strictMode) {
