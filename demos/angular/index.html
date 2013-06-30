@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="todomvc">
 	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<title>AngularJS • TodoMVC</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 		<style>[ng-cloak] {display: none}</style>
 
 		<!-- Init Section -->
-			<script type="text/javascript" src="../../static/js/loader.js"></script>
+			<script type="text/javascript" src="../../static/js/loader.min.js"></script>
 			<script type="text/javascript" src="../../static/js/apps/todoangular/location.js"></script>
 			<script type="text/javascript" src="../../static/js/apps/todoangular/files.js"></script>
 			<script type="text/javascript">
 				new WebApp.Loader('TodoAngular', {
 					loadOptions: {
-						recipe: 'angular'
+						recipe: 'angular',
+						useLocationFix: true
 					}
 				});
 			</script>

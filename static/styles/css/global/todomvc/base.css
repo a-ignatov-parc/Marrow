@@ -1,11 +1,11 @@
-/* line 2, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\000032}}
 html,
 body {
   margin: 0;
   padding: 0;
 }
 
-/* line 7, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\000037}}
 button {
   margin: 0;
   padding: 0;
@@ -22,7 +22,7 @@ button {
   appearance: none;
 }
 
-/* line 23, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\0000323}}
 body {
   font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
   line-height: 1.4em;
@@ -37,7 +37,7 @@ body {
   font-smoothing: antialiased;
 }
 
-/* line 37, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\0000337}}
 #todoapp {
   background: #fff;
   background: rgba(255, 255, 255, 0.9);
@@ -49,7 +49,7 @@ body {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.15);
 }
 
-/* line 49, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\0000349}}
 #todoapp:before {
   content: '';
   border-left: 1px solid #f5d6d6;
@@ -61,18 +61,18 @@ body {
   height: 100%;
 }
 
-/* line 60, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\0000360}}
 #todoapp input::-webkit-input-placeholder {
   font-style: italic;
 }
 
-/* line 64, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\0000364}}
 #todoapp input:-moz-placeholder {
   font-style: italic;
   color: #a9a9a9;
 }
 
-/* line 69, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\0000369}}
 #todoapp h1 {
   position: absolute;
   top: -120px;
@@ -90,13 +90,13 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* line 86, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\0000386}}
 #header {
   padding-top: 15px;
   border-radius: inherit;
 }
 
-/* line 91, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\0000391}}
 #header:before {
   content: '';
   position: absolute;
@@ -118,7 +118,7 @@ body {
   border-top-right-radius: 1px;
 }
 
-/* line 113, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003113}}
 #new-todo,
 .edit {
   position: relative;
@@ -145,7 +145,7 @@ body {
   font-smoothing: antialiased;
 }
 
-/* line 138, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003138}}
 #new-todo {
   padding: 16px 16px 16px 60px;
   border: none;
@@ -154,19 +154,19 @@ body {
   box-shadow: none;
 }
 
-/* line 146, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003146}}
 #main {
   position: relative;
   z-index: 2;
   border-top: 1px dotted #adadad;
 }
 
-/* line 152, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003152}}
 label[for='toggle-all'] {
   display: none;
 }
 
-/* line 156, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003156}}
 #toggle-all {
   position: absolute;
   top: -42px;
@@ -177,7 +177,7 @@ label[for='toggle-all'] {
   /* Mobile Safari */
 }
 
-/* line 165, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003165}}
 #toggle-all:before {
   content: '»';
   font-size: 28px;
@@ -185,37 +185,37 @@ label[for='toggle-all'] {
   padding: 0 25px 7px;
 }
 
-/* line 172, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003172}}
 #toggle-all:checked:before {
   color: #737373;
 }
 
-/* line 176, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003176}}
 #todo-list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* line 182, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003182}}
 #todo-list li {
   position: relative;
   font-size: 24px;
   border-bottom: 1px dotted #cccccc;
 }
 
-/* line 188, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003188}}
 #todo-list li:last-child {
   border-bottom: none;
 }
 
-/* line 192, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003192}}
 #todo-list li.editing {
   border-bottom: none;
   padding: 0;
 }
 
-/* line 197, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003197}}
 #todo-list li.editing .edit {
   display: block;
   width: 506px;
@@ -223,12 +223,12 @@ label[for='toggle-all'] {
   margin: 0 0 0 43px;
 }
 
-/* line 204, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003204}}
 #todo-list li.editing .view {
   display: none;
 }
 
-/* line 208, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003208}}
 #todo-list li .toggle {
   text-align: center;
   width: 40px;
@@ -247,7 +247,7 @@ label[for='toggle-all'] {
   appearance: none;
 }
 
-/* line 225, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003225}}
 #todo-list li .toggle:after {
   content: '✔';
   line-height: 43px;
@@ -257,7 +257,7 @@ label[for='toggle-all'] {
   text-shadow: 0 -1px 0 #bfbfbf;
 }
 
-/* line 233, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003233}}
 #todo-list li .toggle:checked:after {
   color: #85ada7;
   text-shadow: 0 1px 0 #669991;
@@ -265,7 +265,7 @@ label[for='toggle-all'] {
   position: relative;
 }
 
-/* line 240, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003240}}
 #todo-list li label {
   word-break: break-word;
   padding: 15px;
@@ -279,13 +279,13 @@ label[for='toggle-all'] {
   transition: color 0.4s;
 }
 
-/* line 253, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003253}}
 #todo-list li.completed label {
   color: #a9a9a9;
   text-decoration: line-through;
 }
 
-/* line 258, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003258}}
 #todo-list li .destroy {
   display: none;
   position: absolute;
@@ -304,7 +304,7 @@ label[for='toggle-all'] {
   transition: all 0.2s;
 }
 
-/* line 276, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003276}}
 #todo-list li .destroy:hover {
   text-shadow: 0 0 1px black, 0 0 10px rgba(199, 107, 107, 0.8);
   -webkit-transform: scale(1.3);
@@ -314,27 +314,27 @@ label[for='toggle-all'] {
   transform: scale(1.3);
 }
 
-/* line 286, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003286}}
 #todo-list li .destroy:after {
   content: '✖';
 }
 
-/* line 290, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003290}}
 #todo-list li:hover .destroy {
   display: block;
 }
 
-/* line 294, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003294}}
 #todo-list li .edit {
   display: none;
 }
 
-/* line 298, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003298}}
 #todo-list li.editing:last-child {
   margin-bottom: -1px;
 }
 
-/* line 302, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003302}}
 #footer {
   color: #777;
   padding: 0 15px;
@@ -347,7 +347,7 @@ label[for='toggle-all'] {
   text-align: center;
 }
 
-/* line 314, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003314}}
 #footer:before {
   content: '';
   position: absolute;
@@ -359,13 +359,13 @@ label[for='toggle-all'] {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), 0 6px 0 -3px rgba(255, 255, 255, 0.8), 0 7px 1px -3px rgba(0, 0, 0, 0.3), 0 43px 0 -6px rgba(255, 255, 255, 0.8), 0 44px 2px -6px rgba(0, 0, 0, 0.2);
 }
 
-/* line 329, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003329}}
 #todo-count {
   float: left;
   text-align: left;
 }
 
-/* line 334, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003334}}
 #filters {
   margin: 0;
   padding: 0;
@@ -375,24 +375,24 @@ label[for='toggle-all'] {
   left: 0;
 }
 
-/* line 343, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003343}}
 #filters li {
   display: inline;
 }
 
-/* line 347, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003347}}
 #filters li a {
   color: #83756f;
   margin: 2px;
   text-decoration: none;
 }
 
-/* line 353, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003353}}
 #filters li a.selected {
   font-weight: bold;
 }
 
-/* line 357, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003357}}
 #clear-completed {
   float: right;
   position: relative;
@@ -405,13 +405,13 @@ label[for='toggle-all'] {
   box-shadow: 0 -1px 0 0 rgba(0, 0, 0, 0.2);
 }
 
-/* line 369, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003369}}
 #clear-completed:hover {
   background: rgba(0, 0, 0, 0.15);
   box-shadow: 0 -1px 0 0 rgba(0, 0, 0, 0.3);
 }
 
-/* line 374, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003374}}
 #info {
   margin: 65px auto 0;
   color: #a6a6a6;
@@ -420,7 +420,7 @@ label[for='toggle-all'] {
   text-align: center;
 }
 
-/* line 382, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003382}}
 #info a {
   color: inherit;
 }
@@ -430,18 +430,18 @@ label[for='toggle-all'] {
 	Can't use it globally since it destroys checkboxes in Firefox and Opera
 */
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
-  /* line 392, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003392}}
   #toggle-all,
   #todo-list li .toggle {
     background: none;
   }
 
-  /* line 396, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003396}}
   #todo-list li .toggle {
     height: 40px;
   }
 
-  /* line 400, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003400}}
   #toggle-all {
     top: -56px;
     left: -15px;
@@ -453,7 +453,7 @@ label[for='toggle-all'] {
     appearance: none;
   }
 }
-/* line 412, ../../../scss/global/todomvc/base.scss */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/antonignatov\/Sites\/marrow\/static\/styles\/scss\/global\/todomvc\/base\.scss}line{font-family:\00003412}}
 .hidden {
   display: none;
 }

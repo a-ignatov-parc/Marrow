@@ -1,10 +1,12 @@
 /*global
 	_
 */
-// version: 0.3.6
+// version: 0.3.7
 // -------------
 // 
 // __История версий:__  
+// 
+// * `0.3.7` - Мелкий багфикс для `core.Perf`.
 // 
 // * `0.3.6` - Все транзиты вынесены в отдельные модули и создана система подключения и запуска 
 // любого кол-ва подключаемых транзитов. Сделан багофикс класса `core.Perf`.
@@ -85,7 +87,7 @@ window.WebApp.Core = function(webapp, window, sandbox) {
 		};
 
 	// Версия фреймворка `Marrow`.
-	this.version = '0.3.3-4';
+	this.version = '0.3.4-5';
 
 	// Ссылка для получения из песочницы объекта `window` основного документа в котором 
 	// инициализируется веб-приложение.
@@ -142,10 +144,12 @@ window.WebApp.Core = function(webapp, window, sandbox) {
 				}
 			};
 
-		for (var i = 0, length = methods.length; i < length; i++) {
-			if (methods[i] && methods[i] in window.performance) {
-				method = methods[i];
-				break;
+		if (window.performance != null) {
+			for (var i = 0, length = methods.length; i < length; i++) {
+				if (methods[i] && methods[i] in window.performance) {
+					method = methods[i];
+					break;
+				}
 			}
 		}
 
@@ -611,10 +615,13 @@ window.WebApp.Core.registerTransit = function(name, bindHandler, unbindHandler) 
 		console.error('Wrong arguments type! Should be "string" + "function" but get "' + typeof(name) + '" and "' + typeof(bindHandler) + '"');
 	}
 };
-// version: 0.1.2
+// version: 0.1.3
 // -------------
 // 
 // __История версий:__  
+// 
+// * `0.1.3` - Исправлена ошибка строгого сравнения хостовых объектов из песочницы и основной 
+// страницы.
 // 
 // * `0.1.2` - Добавлен хак для получения ссылки на `jQuery` объект объекта `window` песочницы.
 // 
@@ -669,13 +676,13 @@ window.WebApp.Core.registerTransit = function(name, bindHandler, unbindHandler) 
 			var init = function(selector, context, rootjQuery) {
 					if (typeof(selector) === 'string' && !context) {
 						return new Fn(selector, window.document, rootjQuery);
-					} else if (selector === sandbox && context !== sandbox) {
+					} else if (selector == sandbox && context != sandbox) {
 						return new Fn(window, context, rootjQuery);
-					} else if (selector === sandbox.document) {
+					} else if (selector == sandbox.document) {
 						return new Fn(window.document, context, rootjQuery);
-					} else if (selector === sandbox.document.head) {
+					} else if (selector == sandbox.document.head) {
 						return new Fn(window.document.head, context, rootjQuery);
-					} else if (selector === sandbox.document.body) {
+					} else if (selector == sandbox.document.body) {
 						return new Fn(window.document.body, context, rootjQuery);
 					} else {
 						return new Fn(selector, context, rootjQuery);

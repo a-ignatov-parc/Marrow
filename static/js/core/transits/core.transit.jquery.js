@@ -1,7 +1,10 @@
-// version: 0.1.2
+// version: 0.1.3
 // -------------
 // 
 // __История версий:__  
+// 
+// * `0.1.3` - Исправлена ошибка строгого сравнения хостовых объектов из песочницы и основной 
+// страницы.
 // 
 // * `0.1.2` - Добавлен хак для получения ссылки на `jQuery` объект объекта `window` песочницы.
 // 
@@ -56,13 +59,13 @@
 			var init = function(selector, context, rootjQuery) {
 					if (typeof(selector) === 'string' && !context) {
 						return new Fn(selector, window.document, rootjQuery);
-					} else if (selector === sandbox && context !== sandbox) {
+					} else if (selector == sandbox && context != sandbox) {
 						return new Fn(window, context, rootjQuery);
-					} else if (selector === sandbox.document) {
+					} else if (selector == sandbox.document) {
 						return new Fn(window.document, context, rootjQuery);
-					} else if (selector === sandbox.document.head) {
+					} else if (selector == sandbox.document.head) {
 						return new Fn(window.document.head, context, rootjQuery);
-					} else if (selector === sandbox.document.body) {
+					} else if (selector == sandbox.document.body) {
 						return new Fn(window.document.body, context, rootjQuery);
 					} else {
 						return new Fn(selector, context, rootjQuery);

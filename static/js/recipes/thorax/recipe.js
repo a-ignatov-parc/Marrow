@@ -14,7 +14,18 @@ window.WebApp || (window.WebApp = {});
 window.WebApp.Dependencies = function(window) {
 	var filesList = [];
 
-	filesList.push('recipe_libs/thorax.js!order');
+	if (!window.$) {
+		filesList.push('recipe_libs/jquery.js');
+	}
+
+	if (!window.Handlebars) {
+		filesList.push('system/handlebars.min.js');
+	}
+
+	if (!window._) {
+		filesList.push('recipe_libs/underscore.js');
+	}
+	filesList.push('recipe_libs/backbone.js', 'recipe_libs/thorax.js');
 
 	//initialize the app object
 	window.app = {};
@@ -26,6 +37,9 @@ window.WebApp.Dependencies = function(window) {
 window.WebApp.Recipe = function(webapp, window, sandbox, options) {
 	// Подключаем необходимые транзиты.
 	this.useTransits('jquery', 'location', options);
+
+	// Подготавливаем _DOM_ элемент который будет выступать в качестве контейнера для веб-приложения.
+	this.container = $(options.loadOptions.containerSelector || 'body');
 
 	// Метод инициалзиации рантайма веб-приложения.
 	this.init = function(initData, registerAfterInitHandler) {

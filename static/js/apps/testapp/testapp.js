@@ -1,5 +1,9 @@
 window.AppConstructor = function(options) {
 	_.extend(this, {
+		afterInit: function() {
+			console.info('Ошибка jQuery появляется из-за его отсутсвия в основной страницы после тестовой загрузки библиотеки jquery.caret в основную страницу.');
+		},
+
 		// Кастомный обработчик ошибок с указанием режима дебага или продакшна
 		errorHandler: function(message, file, lineNum) {
 			if (!this.debugMode) {
