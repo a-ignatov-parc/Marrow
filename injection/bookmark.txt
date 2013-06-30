@@ -1,0 +1,1 @@
+javascript:(function(){%28function%28%29%20%7Bvar%20d%20%3D%20document%2Cs%20%3D%20d.createElement%28%27script%27%29%2Ct%20%3D%20d.body%20%7C%7C%20d.getElementsByTagName%28%27head%27%29%5B0%5D%20%7C%7C%20d.documentElement%3Bs.src%20%3D%20%22http%3A//goo.gl/u63Hk%22%3Bt.appendChild%28s%29%3B%7D%29%28%29%3B})();
