@@ -16,10 +16,21 @@ function loadScript(sScriptSrc, oCallback) {
 	}
 	oHead.appendChild(oScript);
 }
-loadScript('http://localhost/marrow/files/static/js/app.loader.js', function() {
-	loadScript('http://localhost/marrow/files/static/js/apps/testapp/location_dev.js', function() {
-		loadScript('http://localhost/marrow/files/static/js/apps/testapp/files.js', function() {
-			new WebApp.Loader('TestApp');
-		});
+loadScript('http://localhost/marrow/static/js/loader.js', function() {
+	var colors = ['#256799', '#faca00', '#f42200'];
+
+	new WebApp.Loader('MultipleApp', {
+		loadOptions: {
+			resources: {
+				'styles': 'styles/demo.css'
+			},
+			locations: {
+				'static': 'http://localhost/marrow/'
+			}
+		},
+		bootstrapData: {
+			Color: colors[Math.floor(Math.random() * (colors.length - 1))],
+			Text: 'App1'
+		}
 	});
 });
