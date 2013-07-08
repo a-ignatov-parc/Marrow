@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="todomvc">
+<html lang="en" ng-app="todomvc" data-framework="angularjs">
 	<head>
 		<title>AngularJS + Thorax • TodoMVC</title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -27,6 +27,7 @@
 				new WebApp.Loader('TodoThorax', {
 					loadOptions: {
 						recipe: 'thorax',
+						useLocationFix: true,
 						containerSelector: '#thorax-container'
 					}
 				});
