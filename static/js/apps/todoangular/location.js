@@ -2,6 +2,6 @@ WebApp.TodoAngular = {
 	debugMode: true,
 	strictMode: false,
 	locations: {
-		'static': 'http://localhost/marrow/'
+		'static': 'http://a-ignatov-parc.github.io/Marrow/'
 	}
 };
