@@ -34,8 +34,8 @@ WebApp.TestApp = {
 	debugMode: true,
 	strictMode: false,
 	locations: {
-		'app': 'http://localhost/marrow/',
-		'static': 'http://localhost/marrow/',
-		'customPath': '/marrow/'
+		'app': 'http://a-ignatov-parc.github.io/Marrow/',
+		'static': 'http://a-ignatov-parc.github.io/Marrow/',
+		'customPath': '/Marrow/'
 	}
 };
